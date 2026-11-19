@@ -108,6 +108,22 @@ export async function agendarLembretes(r: Rotina): Promise<void> {
   }
 }
 
+/**
+ * Ao abrir a área logada: os lembretes do aparelho passam a ser só os das rotinas ativas desta conta.
+ * Não pede permissão (só reagenda se ela já foi concedida). Nunca lança.
+ */
+export async function reagendarLembretes(rotinas: Rotina[]): Promise<void> {
+  if (!suportado()) return;
+  try {
+    const Notifications = notif();
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    if (!(await Notifications.getPermissionsAsync()).granted) return;
+    for (const r of rotinas) if (r.ativa) await agendarLembretes(r);
+  } catch {
+    // Sem log: o lembrete é conveniência; a rotina continua salva.
+  }
+}
+
 export async function cancelarTodosLembretes(): Promise<void> {
   if (!suportado()) return;
   await notif().cancelAllScheduledNotificationsAsync();

@@ -37,7 +37,7 @@ jest.mock('expo-secure-store', () => {
 });
 jest.mock('@/locais', () => jest.requireActual<typeof import('@/test-utils/locais')>('@/test-utils/locais').moduloLocais);
 jest.mock('@/consulta', () => ({ useConsulta: jest.fn() }));
-jest.mock('@/sessao/SessaoContext', () => ({ useSessao: jest.fn() }));
+jest.mock('@/sessao/SessaoContext', () => ({ useSessao: jest.fn(), useIdConta: () => 'sem-conta' }));
 jest.mock('@/services', () => ({
   servicos: { conta: { encerrarSessaoRemota: jest.fn() } },
 }));

@@ -31,13 +31,14 @@ describe('SessaoProvider com Neon Auth configurado', () => {
     store.getItemAsync.mockResolvedValue(JSON.stringify(sessao(token)));
     await render(<SessaoProvider><Sonda /></SessaoProvider>);
     await waitFor(() => expect(screen.getByText('deslogado')).toBeTruthy());
-    expect(store.deleteItemAsync).toHaveBeenCalledTimes(1);
+    expect(store.deleteItemAsync).toHaveBeenCalledWith('voltasegura.sessao');
+    expect(store.deleteItemAsync.mock.calls.filter(([chave]) => chave === 'voltasegura.sessao')).toHaveLength(1);
   });
 
   it('mantém a sessão com cookie do Neon Auth', async () => {
     store.getItemAsync.mockResolvedValue(JSON.stringify(sessao('__Secure-neon-auth.session_token=abc123')));
     await render(<SessaoProvider><Sonda /></SessaoProvider>);
     await waitFor(() => expect(screen.getByText('logado')).toBeTruthy());
-    expect(store.deleteItemAsync).not.toHaveBeenCalled();
+    expect(store.deleteItemAsync).not.toHaveBeenCalledWith('voltasegura.sessao');
   });
 });

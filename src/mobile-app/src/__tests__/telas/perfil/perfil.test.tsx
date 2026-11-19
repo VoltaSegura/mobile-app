@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { chaveDaConta, SEM_CONTA } from '@/sessao/escopo';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -25,7 +26,7 @@ jest.mock('expo-router', () => ({
   router: { push: (...a: unknown[]) => mockPush(...a), replace: (...a: unknown[]) => mockReplace(...a), back: jest.fn(), canGoBack: () => true },
   useLocalSearchParams: () => ({}),
 }));
-jest.mock('@/sessao/SessaoContext', () => ({ useSessao: jest.fn() }));
+jest.mock('@/sessao/SessaoContext', () => ({ useSessao: jest.fn(), useIdConta: () => 'sem-conta' }));
 jest.mock('@/services', () => ({ servicos: { conta: { encerrarSessaoRemota: jest.fn() } } }));
 
 const margens = { top: 0, bottom: 0, left: 0, right: 0 };
@@ -44,7 +45,7 @@ function renderPerfil() {
 
 describe('aba Perfil (itens 1, 3, 5 e 12 do T25-B)', () => {
   beforeEach(async () => {
-    await SecureStore.deleteItemAsync('voltasegura.plus');
+    await SecureStore.deleteItemAsync(chaveDaConta('voltasegura.plus', SEM_CONTA));
     await SecureStore.deleteItemAsync('voltasegura.tema');
     jest.mocked(SecureStore.setItemAsync).mockClear();
     mockPush.mockClear();
@@ -61,7 +62,7 @@ describe('aba Perfil (itens 1, 3, 5 e 12 do T25-B)', () => {
   });
 
   it('mostra o status da assinatura simulada com a data do teste', async () => {
-    await gravarAssinatura({ plano: 'mensal', inicio: new Date().toISOString() });
+    await gravarAssinatura(SEM_CONTA, { plano: 'mensal', inicio: new Date().toISOString() });
     await renderPerfil();
     await waitFor(() => expect(screen.getByText(/Assinante mensal · teste até/)).toBeTruthy());
   });

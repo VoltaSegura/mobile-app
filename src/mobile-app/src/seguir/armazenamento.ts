@@ -1,27 +1,22 @@
-import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
+import { chaveDaConta, gravarCofre, lerCofre } from '@/sessao/escopo';
 
 // Preferência local: a pessoa marcou "Entendi e não mostrar de novo" no aviso de Seguir rota (TL-18).
 // Fica só no aparelho, sem coordenadas nem dados de viagem.
-const CHAVE = 'voltasegura.seguir.introOculta';
+const BASE = 'voltasegura.seguir.introOculta';
 
-/** Na web o SecureStore não existe: guardamos só em memória. */
-let memoriaWeb: string | null = null;
-
-export async function lerIntroOculta(): Promise<boolean> {
+export async function lerIntroOculta(conta: string): Promise<boolean> {
   try {
-    const bruto = Platform.OS === 'web' ? memoriaWeb : await SecureStore.getItemAsync(CHAVE);
+    const bruto = await lerCofre(chaveDaConta(BASE, conta));
     return bruto === 'sim';
   } catch {
     return false;
   }
 }
 
-export async function gravarIntroOculta(oculta: boolean): Promise<void> {
+export async function gravarIntroOculta(conta: string, oculta: boolean): Promise<void> {
   try {
     const valor = oculta ? 'sim' : 'nao';
-    if (Platform.OS === 'web') { memoriaWeb = valor; return; }
-    await SecureStore.setItemAsync(CHAVE, valor);
+    await gravarCofre(chaveDaConta(BASE, conta), valor);
   } catch {
     // sem log: a preferência é só conveniência; na falha o aviso volta a aparecer
   }

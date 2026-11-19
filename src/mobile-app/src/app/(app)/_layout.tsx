@@ -5,6 +5,7 @@ import { ConsultaProvider } from '@/consulta';
 import { LocaisProvider } from '@/locais';
 import { AberturaPorLembrete, RotinaProvider } from '@/rotina';
 import { AssinaturaProvider } from '@/plus/AssinaturaContext';
+import { useIdConta } from '@/sessao/SessaoContext';
 import { fonte } from '@/theme/tokens';
 import { useTema } from '@/theme/useTema';
 import { Botao } from '@/components/Botao';
@@ -24,8 +25,10 @@ export const unstable_settings = { initialRouteName: '(abas)' };
  * desmonta e a consulta e a resposta são descartadas (05_navegacao.md, "Estados globais").
  */
 export default function AppLayout() {
+  // Trocar de conta remonta tudo: locais, rotinas, contatos e assinatura nunca passam de uma conta para outra (D-40).
+  const conta = useIdConta();
   return (
-    <ConsultaProvider>
+    <ConsultaProvider key={conta}>
       <LocaisProvider>
         <AssinaturaProvider>
           <RotinaProvider>

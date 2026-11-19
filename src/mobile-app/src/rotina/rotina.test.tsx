@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { chaveDaConta, SEM_CONTA } from '@/sessao/escopo';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
@@ -22,6 +23,7 @@ jest.mock('@/services/lembretes', () => ({
   agendarLembretes: jest.fn(async () => undefined),
   cancelarLembretes: jest.fn(async () => undefined),
   cancelarTodosLembretes: jest.fn(async () => undefined),
+  reagendarLembretes: jest.fn(async () => undefined),
 }));
 
 type Mock = jest.Mock<(...args: any[]) => Promise<any>>;
@@ -70,7 +72,7 @@ describe('rotina da semana (FN-17, D-31)', () => {
     expect(result.current.rotinas[0].hora).toBe('07:45');
     expect(L.pedirPermissaoLembretes).toHaveBeenCalledTimes(1);
     expect(L.agendarLembretes).toHaveBeenCalledTimes(1);
-    expect((await lerRotinas())[0].origem.rotulo).toBe('Casa');
+    expect((await lerRotinas(SEM_CONTA))[0].origem.rotulo).toBe('Casa');
   });
 
   it('permissão negada: avisa, mantém a rotina salva e não programa (AC4)', async () => {
@@ -117,8 +119,8 @@ describe('rotina da semana (FN-17, D-31)', () => {
   });
 
   it('descarta registros corrompidos ao ler', async () => {
-    await SecureStore.setItemAsync('voltasegura.rotinas', JSON.stringify([{ id: 'x' }, { id: 'ok', ...dados, hora: '9:05', dias: [3, 3, 9], antecedencia: 7 }]));
-    const lidas = await lerRotinas();
+    await SecureStore.setItemAsync(chaveDaConta('voltasegura.rotinas', SEM_CONTA), JSON.stringify([{ id: 'x' }, { id: 'ok', ...dados, hora: '9:05', dias: [3, 3, 9], antecedencia: 7 }]));
+    const lidas = await lerRotinas(SEM_CONTA);
     expect(lidas).toHaveLength(1);
     expect(lidas[0]).toMatchObject({ id: 'ok', hora: '09:05', dias: [3], antecedencia: 15 });
   });

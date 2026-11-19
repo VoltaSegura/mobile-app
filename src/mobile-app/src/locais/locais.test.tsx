@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { chaveDaConta, SEM_CONTA } from '@/sessao/escopo';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
@@ -42,8 +43,8 @@ describe('locais salvos (FN-13, D-29)', () => {
 
   it('preserva lugar antigo e descarta só endereço de tipo inválido', async () => {
     const antigo = { id: 'antigo', nome: 'Casa', tipo: 'casa', ponto };
-    await SecureStore.setItemAsync('voltasegura.locais', JSON.stringify([antigo, { ...antigo, id: 'invalido', endereco: 42 }]));
-    expect(await lerLocais()).toEqual([antigo, { ...antigo, id: 'invalido' }]);
+    await SecureStore.setItemAsync(chaveDaConta('voltasegura.locais', SEM_CONTA), JSON.stringify([antigo, { ...antigo, id: 'invalido', endereco: 42 }]));
+    expect(await lerLocais(SEM_CONTA)).toEqual([antigo, { ...antigo, id: 'invalido' }]);
   });
 
   it('atualiza, renomeia e desfaz sem perder o endereço', async () => {

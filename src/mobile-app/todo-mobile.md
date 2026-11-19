@@ -338,3 +338,4 @@ Quem testou no Expo Go viu o mapa, mas relatou: não sabe como selecionar os cam
 - [x] Item 9: Fechar no Seguir volta direto à home (`dismissAll` + `replace('/planejar')`).
 - [x] **Teclado que abria e fechava (Locais, Contatos e, antes, horário e Configurações):** `CampoTexto` acrescentava sombra à caixa só no foco; no Android isso recria a view e o campo perde o foco. Foco agora só na borda; teste de regressão em `components/componentes.test.tsx`. Validado no aparelho pelo Lucas em 19/11.
 - [ ] `[EM ABERTO]` novo caminho para "Planejar a volta" (FL-08, US-07 AC1).
+- [x] **Dados separados por conta (D-40):** locais, rotinas, contatos, assinatura simulada, tema e aviso do Seguir passam a ter chave por conta (`sessao/escopo.ts`); lembretes cancelados ao sair e reagendados ao entrar; chaves globais antigas apagadas. `tsc`, ESLint e Jest 862 testes (64 suítes). Falta validar no aparelho (duas contas, sair e entrar).

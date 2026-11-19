@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
+import { useIdConta } from '@/sessao/SessaoContext';
+import { apagarCofre, chaveDaConta, gravarCofre, lerCofre } from '@/sessao/escopo';
 
 /**
  * Assinatura simulada do VoltaSegura+ (itens 5 e 12 do T25-B; D-36). Simulação: não há cobrança nem pagamento.
@@ -14,11 +14,8 @@ export type AssinaturaSimulada = {
   inicio: string;
 };
 
-const CHAVE = 'voltasegura.plus';
+const BASE = 'voltasegura.plus';
 const PLANOS: readonly PlanoSimulado[] = ['mensal', 'anual'];
-
-/** Na web o SecureStore não existe: guardamos só em memória (a web serve apenas ao desenvolvimento). */
-let memoriaWeb: string | null = null;
 
 function ehAssinatura(v: unknown): v is AssinaturaSimulada {
   if (typeof v !== 'object' || v === null) return false;
@@ -26,9 +23,9 @@ function ehAssinatura(v: unknown): v is AssinaturaSimulada {
   return typeof a.plano === 'string' && PLANOS.includes(a.plano as PlanoSimulado) && typeof a.inicio === 'string' && !Number.isNaN(Date.parse(a.inicio));
 }
 
-export async function lerAssinatura(): Promise<AssinaturaSimulada | null> {
+export async function lerAssinatura(conta: string): Promise<AssinaturaSimulada | null> {
   try {
-    const bruto = Platform.OS === 'web' ? memoriaWeb : await SecureStore.getItemAsync(CHAVE);
+    const bruto = await lerCofre(chaveDaConta(BASE, conta));
     if (!bruto) return null;
     const dados: unknown = JSON.parse(bruto);
     return ehAssinatura(dados) ? dados : null;
@@ -37,15 +34,12 @@ export async function lerAssinatura(): Promise<AssinaturaSimulada | null> {
   }
 }
 
-export async function gravarAssinatura(assinatura: AssinaturaSimulada | null): Promise<void> {
+export async function gravarAssinatura(conta: string, assinatura: AssinaturaSimulada | null): Promise<void> {
   if (assinatura === null) {
-    if (Platform.OS === 'web') { memoriaWeb = null; return; }
-    await SecureStore.deleteItemAsync(CHAVE);
+    await apagarCofre(chaveDaConta(BASE, conta));
     return;
   }
-  const texto = JSON.stringify(assinatura);
-  if (Platform.OS === 'web') { memoriaWeb = texto; return; }
-  await SecureStore.setItemAsync(CHAVE, texto);
+  await gravarCofre(chaveDaConta(BASE, conta), JSON.stringify(assinatura));
 }
 
 type Valor = {
@@ -64,33 +58,34 @@ type Valor = {
 const Contexto = createContext<Valor | null>(null);
 
 export function AssinaturaProvider({ children }: { children: ReactNode }) {
+  const conta = useIdConta();
   const [atual, setAtual] = useState<AssinaturaSimulada | null>(null);
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
     let ativo = true;
-    void lerAssinatura().then((lida) => { if (ativo) { setAtual(lida); setCarregado(true); } });
+    void lerAssinatura(conta).then((lida) => { if (ativo) { setAtual(lida); setCarregado(true); } });
     return () => { ativo = false; };
-  }, []);
+  }, [conta]);
 
   const assinar = useCallback(async (plano: PlanoSimulado) => {
     const nova: AssinaturaSimulada = { plano, inicio: new Date().toISOString() };
     setAtual(nova);
     try {
-      await gravarAssinatura(nova);
+      await gravarAssinatura(conta, nova);
     } catch {
       // Sem log: a simulação segue só nesta sessão do app.
     }
-  }, []);
+  }, [conta]);
 
   const cancelar = useCallback(async () => {
     setAtual(null);
     try {
-      await gravarAssinatura(null);
+      await gravarAssinatura(conta, null);
     } catch {
       // Sem log.
     }
-  }, []);
+  }, [conta]);
 
   const valor = useMemo<Valor>(() => ({
     assinante: atual !== null,

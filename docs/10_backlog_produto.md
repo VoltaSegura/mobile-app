@@ -329,7 +329,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 - **AC1.** Dado a tela da rotina, quando a usuária cadastrar um trajeto fixo (origem, destino, dias e horário de saída), então ele fica salvo **só no aparelho**.
 - **AC2.** Dado uma rotina ativa, quando chegar o horário do aviso, então o app envia uma notificação local antes da saída. `[DECISÃO — 15/11/2026]` (D-31) O gatilho é um **lembrete por horário**: N minutos antes da saída (padrão 15), nos dias da rotina, **sem tempo real e sem servidor**. Texto: "Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair." Tocar na notificação abre a tela inicial com origem, destino e saída da rotina. `[HIPÓTESE]` antecedência de 5, 10, 15 ou 30 min; até 5 rotinas; origem e destino entre os lugares salvos.
-- **AC3.** A rotina pode ser editada, desativada e apagada, e nunca é enviada ao servidor nem vinculada à conta (DT-08).
+- **AC3.** A rotina pode ser editada, desativada e apagada, e nunca é enviada ao servidor; fica separada por conta no aparelho (DT-08, D-40).
 - **AC4.** Dado a permissão de notificações negada, então o app informa que o aviso não será enviado e a rotina continua salva.
 - **AC5.** Nenhum texto promete segurança ou usa "rota segura" (RNF-01); a tela identifica o VoltaSegura+ como recurso em validação, sem preço.
 - `[DECISÃO — 15/11/2026]` O aviso **não** informa mudança no resultado: só o horário (sem tempo real).

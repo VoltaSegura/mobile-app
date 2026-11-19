@@ -7,6 +7,7 @@ import { Aviso, Botao, Icone, Tela, Texto } from '@/components';
 import { MapaSeguir } from '@/components/mapa';
 import { formatarHora } from '@/components/resultado/formatos';
 import { useConsulta } from '@/consulta';
+import { useIdConta } from '@/sessao/SessaoContext';
 import { gravarIntroOculta, lerIntroOculta } from '@/seguir/armazenamento';
 import { useSeguirRota } from '@/seguir/useSeguirRota';
 import type { Rota } from '@/services';
@@ -28,11 +29,12 @@ export default function SeguirRotaTela() {
 
 function Acompanhamento({ rota: rotaAberta }: { rota: Rota }) {
   const { rota, status, avaliacao, posicao, recalculo, comecar, encerrar, tentarRecalculo } = useSeguirRota(rotaAberta);
+  const conta = useIdConta();
   const titulo = <Stack.Screen options={{ title: seguir.titulo }} />;
   // null enquanto a preferência não foi lida: não mostra o aviso antes de saber se ele deve sumir.
   const [introOculta, setIntroOculta] = useState<boolean | null>(null);
   const [naoMostrarDeNovo, setNaoMostrarDeNovo] = useState(false);
-  useEffect(() => { void lerIntroOculta().then(setIntroOculta); }, []);
+  useEffect(() => { void lerIntroOculta(conta).then(setIntroOculta); }, [conta]);
 
   if (status === 'semTrajeto') {
     return <Tela>
@@ -44,7 +46,7 @@ function Acompanhamento({ rota: rotaAberta }: { rota: Rota }) {
   if (status === 'pronto' || status === 'pedindoPermissao' || status === 'semPermissao' || status === 'erro') {
     const tentar = status === 'semPermissao' || status === 'erro';
     const iniciar = () => {
-      if (naoMostrarDeNovo) void gravarIntroOculta(true);
+      if (naoMostrarDeNovo) void gravarIntroOculta(conta, true);
       void comecar();
     };
     return <Tela rodape={<Botao rotulo={tentar ? seguir.tentarDeNovo : seguir.comecar} onPress={iniciar}

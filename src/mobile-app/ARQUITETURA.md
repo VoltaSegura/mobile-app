@@ -95,6 +95,7 @@ Pendente (05_navegacao, "Guardas"): voltar à rota guardada depois de a sessão 
 
 - Abas em `src/app/(app)/(abas)/` (`_layout.tsx` com `Tabs` e `BarraAbas`): `planejar`, `locais`, `contatos`, `plus` (portão: home se há assinatura simulada, senão planos) e `perfil` (tela própria; `configuracoes.tsx` foi removida, D-38). Pilha do Plus em `src/app/(app)/plus/`: `confirmacao`, `home`, `volta-pronta`, `radar`, `resumo`, `assinatura`. Provedores novos: `ModoTemaProvider` (raiz, `app/_layout.tsx`) e `AssinaturaProvider` (`(app)/_layout.tsx`). Mapa em `docs/app-map/05_navegacao.md`.
 - `src/plus/`: datas da simulação (sem Intl), dados de exemplo (`exemplos.ts`) e `FundoMapa` (decorativo, feito com Views; sem SVG no projeto).
-- `src/contatos/`: nomes no SecureStore (`voltasegura.contatos`), até 10; sem telefone ou conta. Não há provider: a tela carrega e grava sozinha.
+- `src/contatos/`: nomes no SecureStore (`voltasegura.contatos.<id da conta>`), até 10; sem telefone. Não há provider: a tela carrega e grava sozinha.
+- `src/sessao/escopo.ts` (D-40): dados do aparelho separados por conta. `idArmazenamento(email)` é um hash do e-mail normalizado; `chaveDaConta(base, id)` monta a chave; `lerCofre`/`gravarCofre`/`apagarCofre` usam o SecureStore (memória na web); `apagarChavesGlobaisAntigas` limpa as chaves de antes. `useIdConta()` (em `SessaoContext.tsx`) entrega o id aos providers; o `(app)/_layout.tsx` remonta a área logada quando a conta muda.
 - `src/textos/plus.ts` e `src/textos/abas.ts` entram no agregador `src/textos/index.ts`.
 - O horário da rotina usa `SeletorHorario` (`src/components/planejar/`).

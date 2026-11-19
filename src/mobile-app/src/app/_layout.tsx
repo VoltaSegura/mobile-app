@@ -21,8 +21,8 @@ export default function RootLayout() {
   // Segura a primeira pintura (fundo da marca) até as fontes chegarem: evita o salto de fonte.
   if (!fontesProntas) return <View style={{ flex: 1, backgroundColor: coresEscuro.fundo }} />;
   return (
-    <ModoTemaProvider>
-      <SessaoProvider>
+    <SessaoProvider>
+      <ModoTemaProvider>
         <CompartilhamentoProvider>
           <LigacaoServicos />
           <LigacaoLink />
@@ -30,8 +30,8 @@ export default function RootLayout() {
             <Navegacao />
           </IndicadorCompartilhamento>
         </CompartilhamentoProvider>
-      </SessaoProvider>
-    </ModoTemaProvider>
+      </ModoTemaProvider>
+    </SessaoProvider>
   );
 }
 

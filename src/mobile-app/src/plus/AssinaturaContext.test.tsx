@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { chaveDaConta, SEM_CONTA } from '@/sessao/escopo';
 import { act, renderHook } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 
@@ -13,7 +14,7 @@ jest.mock('expo-secure-store', () => {
   };
 });
 
-const CHAVE = 'voltasegura.plus';
+const CHAVE = chaveDaConta('voltasegura.plus', SEM_CONTA);
 
 function envolver({ children }: { children: React.ReactNode }) {
   return <AssinaturaProvider>{children}</AssinaturaProvider>;
@@ -48,12 +49,12 @@ describe('assinatura simulada (D-36)', () => {
 
     await act(async () => { await result.current.cancelar(); });
     expect(result.current.assinante).toBe(false);
-    expect(await lerAssinatura()).toBeNull();
+    expect(await lerAssinatura(SEM_CONTA)).toBeNull();
   });
 
   it('lê uma assinatura gravada numa sessão anterior', async () => {
     const inicio = '2026-11-18T12:00:00.000Z';
-    await gravarAssinatura({ plano: 'mensal', inicio });
+    await gravarAssinatura(SEM_CONTA, { plano: 'mensal', inicio });
     const { result } = await renderHook(() => useAssinatura(), { wrapper: envolver });
     await act(async () => {});
     expect(result.current.assinante).toBe(true);
@@ -63,7 +64,7 @@ describe('assinatura simulada (D-36)', () => {
 
   it('descarta registro inválido sem quebrar', async () => {
     await SecureStore.setItemAsync(CHAVE, JSON.stringify({ plano: 'vitalicio', inicio: 'não é data' }));
-    expect(await lerAssinatura()).toBeNull();
+    expect(await lerAssinatura(SEM_CONTA)).toBeNull();
   });
 
   it('exige o provider', async () => {

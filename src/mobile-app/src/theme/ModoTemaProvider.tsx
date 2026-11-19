@@ -1,28 +1,36 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
+import { useIdConta } from '@/sessao/SessaoContext';
+import { chaveDaConta, gravarCofre, lerCofre, SEM_CONTA } from '@/sessao/escopo';
 
 /** Preferência de tema escolhida na aba Perfil (item 3 do T25-B). `sistema` segue o aparelho. */
 export type ModoTema = 'sistema' | 'claro' | 'escuro';
 
-const CHAVE = 'voltasegura.tema';
+const BASE = 'voltasegura.tema';
 const MODOS: readonly ModoTema[] = ['sistema', 'claro', 'escuro'];
 
-/** Na web o SecureStore não existe: guardamos só em memória (a web serve apenas ao desenvolvimento). */
-let memoriaWeb: string | null = null;
+/** Sem conta (telas de entrada) vale a preferência do aparelho; com conta, a da conta (D-40). */
+function chaveTema(conta: string): string {
+  return conta === SEM_CONTA ? BASE : chaveDaConta(BASE, conta);
+}
 
-export async function lerModoTema(): Promise<ModoTema> {
+async function lerChave(chave: string): Promise<ModoTema | null> {
   try {
-    const bruto = Platform.OS === 'web' ? memoriaWeb : await SecureStore.getItemAsync(CHAVE);
-    return MODOS.includes(bruto as ModoTema) ? (bruto as ModoTema) : 'sistema';
+    const bruto = await lerCofre(chave);
+    return MODOS.includes(bruto as ModoTema) ? (bruto as ModoTema) : null;
   } catch {
-    return 'sistema';
+    return null;
   }
 }
 
-export async function gravarModoTema(modo: ModoTema): Promise<void> {
-  if (Platform.OS === 'web') { memoriaWeb = modo; return; }
-  await SecureStore.setItemAsync(CHAVE, modo);
+/** A conta que ainda não escolheu parte da preferência do aparelho. */
+export async function lerModoTema(conta: string = SEM_CONTA): Promise<ModoTema> {
+  const daConta = await lerChave(chaveTema(conta));
+  if (daConta || conta === SEM_CONTA) return daConta ?? 'sistema';
+  return (await lerChave(BASE)) ?? 'sistema';
+}
+
+export async function gravarModoTema(modo: ModoTema, conta: string = SEM_CONTA): Promise<void> {
+  await gravarCofre(chaveTema(conta), modo);
 }
 
 type Valor = {
@@ -35,26 +43,27 @@ const Contexto = createContext<Valor | null>(null);
 
 /**
  * Guarda a preferência de tema no aparelho. Sem este provider, `useTema` segue o sistema (padrão).
- * Deve ficar acima da navegação na raiz (app/_layout.tsx).
+ * Deve ficar acima da navegação na raiz (app/_layout.tsx) e abaixo do `SessaoProvider`, para seguir a conta.
  */
 export function ModoTemaProvider({ children }: { children: ReactNode }) {
+  const conta = useIdConta();
   const [modo, setModo] = useState<ModoTema>('sistema');
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
     let ativo = true;
-    void lerModoTema().then((lido) => { if (ativo) { setModo(lido); setCarregado(true); } });
+    void lerModoTema(conta).then((lido) => { if (ativo) { setModo(lido); setCarregado(true); } });
     return () => { ativo = false; };
-  }, []);
+  }, [conta]);
 
   const definirModo = useCallback(async (proximo: ModoTema) => {
     setModo(proximo);
     try {
-      await gravarModoTema(proximo);
+      await gravarModoTema(proximo, conta);
     } catch {
       // Sem log: a escolha vale até o app fechar.
     }
-  }, []);
+  }, [conta]);
 
   const valor = useMemo(() => ({ modo, carregado, definirModo }), [modo, carregado, definirModo]);
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;

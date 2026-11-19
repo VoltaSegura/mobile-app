@@ -11,7 +11,10 @@ import {
 import { ambiente } from '@/config/ambiente';
 import { ehCookieSessaoNeonAuth } from '@/services/exposicao';
 
+import { cancelarTodosLembretes } from '@/services/lembretes';
+
 import { apagarSessao, gravarSessao, lerSessao } from './armazenamento';
+import { apagarChavesGlobaisAntigas, idArmazenamento, SEM_CONTA } from './escopo';
 import type { Sessao } from './tipos';
 
 type SessaoCtx = {
@@ -50,6 +53,8 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let ativo = true;
+    // Dados de antes da separação por conta (chaves globais): não pertencem a ninguém, são apagados.
+    void apagarChavesGlobaisAntigas();
     (async () => {
       const salva = await lerSessao();
       if (!ativo) return;
@@ -75,6 +80,8 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
   const encerrarSessao = useCallback(async () => {
     setSessao(null);
     await apagarSessao();
+    // Os lembretes das rotinas são da conta que saiu: não podem disparar para a próxima pessoa.
+    await cancelarTodosLembretes().catch(() => undefined);
   }, []);
 
   const valor = useMemo<SessaoCtx>(
@@ -96,6 +103,15 @@ export function SessaoProvider({ children }: { children: ReactNode }) {
   if (carregando) return null;
 
   return <SessaoContext.Provider value={valor}>{children}</SessaoContext.Provider>;
+}
+
+/**
+ * Id de armazenamento da conta da sessão (hash do e-mail, ver `escopo.ts`). Não exige o provider:
+ * sem sessão devolve `SEM_CONTA`, que nunca guarda dado pessoal (a área logada só abre com sessão).
+ */
+export function useIdConta(): string {
+  const email = useContext(SessaoContext)?.sessao?.email;
+  return email ? idArmazenamento(email) : SEM_CONTA;
 }
 
 export function useSessao(): SessaoCtx {

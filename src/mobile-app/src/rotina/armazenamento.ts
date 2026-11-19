@@ -1,13 +1,9 @@
-import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
+import { apagarCofre, chaveDaConta, gravarCofre, lerCofre } from '@/sessao/escopo';
 
 import { ANTECEDENCIA_PADRAO, ANTECEDENCIAS, MAX_ROTINAS, MAX_ROTULO, normalizarHora, type PontoRotina, type Rotina } from './tipos';
 
-// Armazenamento cifrado do aparelho (Keychain/Keystore), como os lugares salvos. Uma chave, JSON pequeno (até 5 rotinas).
-const CHAVE = 'voltasegura.rotinas';
-
-/** Na web o SecureStore não existe: guardamos só em memória (a web serve apenas ao desenvolvimento). */
-let memoriaWeb: string | null = null;
+// Armazenamento cifrado do aparelho (Keychain/Keystore), como os lugares salvos. Uma chave por conta, JSON pequeno (até 5 rotinas).
+const BASE = 'voltasegura.rotinas';
 
 function lerPonto(v: unknown): PontoRotina | null {
   if (typeof v !== 'object' || v === null) return null;
@@ -30,9 +26,9 @@ function lerRotina(v: unknown): Rotina | null {
   return { id: r.id, origem, destino, dias, hora, antecedencia, ativa: r.ativa === true };
 }
 
-export async function lerRotinas(): Promise<Rotina[]> {
+export async function lerRotinas(conta: string): Promise<Rotina[]> {
   try {
-    const bruto = Platform.OS === 'web' ? memoriaWeb : await SecureStore.getItemAsync(CHAVE);
+    const bruto = await lerCofre(chaveDaConta(BASE, conta));
     if (!bruto) return [];
     const dados: unknown = JSON.parse(bruto);
     if (!Array.isArray(dados)) return [];
@@ -42,16 +38,14 @@ export async function lerRotinas(): Promise<Rotina[]> {
   }
 }
 
-export async function gravarRotinas(rotinas: Rotina[]): Promise<void> {
+export async function gravarRotinas(conta: string, rotinas: Rotina[]): Promise<void> {
   const texto = JSON.stringify(rotinas.slice(0, MAX_ROTINAS));
-  if (Platform.OS === 'web') { memoriaWeb = texto; return; }
-  await SecureStore.setItemAsync(CHAVE, texto);
+  await gravarCofre(chaveDaConta(BASE, conta), texto);
 }
 
-export async function apagarTodasRotinas(): Promise<void> {
+export async function apagarTodasRotinas(conta: string): Promise<void> {
   try {
-    if (Platform.OS === 'web') { memoriaWeb = null; return; }
-    await SecureStore.deleteItemAsync(CHAVE);
+    await apagarCofre(chaveDaConta(BASE, conta));
   } catch {
     // sem log: coordenadas nunca vão para o console
   }

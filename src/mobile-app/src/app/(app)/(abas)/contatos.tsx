@@ -4,12 +4,14 @@ import { AccessibilityInfo } from 'react-native';
 import { Aviso, EstadoVazio, GrupoLinhas, LinhaGrupo, Tela, Texto } from '@/components';
 import { FormularioContato } from '@/components/contatos/FormularioContato';
 import { gravarContatos, lerContatos, MAX_CONTATOS, normalizarNomeContato, type Contato } from '@/contatos';
+import { useIdConta } from '@/sessao/SessaoContext';
 import { abas } from '@/textos/abas';
 
 const t = abas.contatos;
 
 /** TL-27: aba Contatos. Só nomes, no aparelho. A lista não envia nada (o envio é sempre uma ação da pessoa). */
 export default function Contatos() {
+  const conta = useIdConta();
   const [contatos, setContatos] = useState<Contato[]>([]);
   const [carregado, setCarregado] = useState(false);
   const [erroLista, setErroLista] = useState<string | null>(null);
@@ -17,12 +19,12 @@ export default function Contatos() {
 
   useEffect(() => {
     let ativo = true;
-    void lerContatos().then((lidos) => { if (ativo) { setContatos(lidos); setCarregado(true); } });
+    void lerContatos(conta).then((lidos) => { if (ativo) { setContatos(lidos); setCarregado(true); } });
     return () => { ativo = false; };
-  }, []);
+  }, [conta]);
 
   async function persistir(proximos: Contato[]) {
-    await gravarContatos(proximos);
+    await gravarContatos(conta, proximos);
     setContatos(proximos);
   }
 

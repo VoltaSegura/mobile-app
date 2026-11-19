@@ -1,14 +1,10 @@
-import * as SecureStore from 'expo-secure-store';
-import { Platform } from 'react-native';
+import { apagarCofre, chaveDaConta, gravarCofre, lerCofre } from '@/sessao/escopo';
 
 import { MAX_ENDERECO, MAX_LOCAIS, MAX_NOME, type LocalSalvo, type TipoLocal } from './tipos';
 
-// Armazenamento cifrado do aparelho (Keychain/Keystore). Uma chave, JSON pequeno (até 10 locais).
-const CHAVE = 'voltasegura.locais';
+// Armazenamento cifrado do aparelho (Keychain/Keystore). Uma chave por conta, JSON pequeno (até 10 locais).
+const BASE = 'voltasegura.locais';
 const TIPOS: readonly TipoLocal[] = ['casa', 'trabalho', 'estudo', 'outro'];
-
-/** Na web o SecureStore não existe: guardamos só em memória (a web serve apenas ao desenvolvimento). */
-let memoriaWeb: string | null = null;
 
 function ehLocal(v: unknown): v is LocalSalvo {
   if (typeof v !== 'object' || v === null) return false;
@@ -34,9 +30,9 @@ function limparEndereco(local: LocalSalvo): LocalSalvo {
   return endereco ? { ...semEndereco, endereco } : semEndereco;
 }
 
-export async function lerLocais(): Promise<LocalSalvo[]> {
+export async function lerLocais(conta: string): Promise<LocalSalvo[]> {
   try {
-    const bruto = Platform.OS === 'web' ? memoriaWeb : await SecureStore.getItemAsync(CHAVE);
+    const bruto = await lerCofre(chaveDaConta(BASE, conta));
     if (!bruto) return [];
     const dados: unknown = JSON.parse(bruto);
     return Array.isArray(dados) ? dados.filter(ehLocal).slice(0, MAX_LOCAIS).map(limparEndereco) : [];
@@ -45,16 +41,14 @@ export async function lerLocais(): Promise<LocalSalvo[]> {
   }
 }
 
-export async function gravarLocais(locais: LocalSalvo[]): Promise<void> {
+export async function gravarLocais(conta: string, locais: LocalSalvo[]): Promise<void> {
   const texto = JSON.stringify(locais.slice(0, MAX_LOCAIS).map(limparEndereco));
-  if (Platform.OS === 'web') { memoriaWeb = texto; return; }
-  await SecureStore.setItemAsync(CHAVE, texto);
+  await gravarCofre(chaveDaConta(BASE, conta), texto);
 }
 
-export async function apagarTodosLocais(): Promise<void> {
+export async function apagarTodosLocais(conta: string): Promise<void> {
   try {
-    if (Platform.OS === 'web') { memoriaWeb = null; return; }
-    await SecureStore.deleteItemAsync(CHAVE);
+    await apagarCofre(chaveDaConta(BASE, conta));
   } catch {
     // sem log: coordenadas nunca vão para o console
   }

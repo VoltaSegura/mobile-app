@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { agendarLembretes, cancelarLembretes, cancelarTodosLembretes, configurarLembretes, pedirPermissaoLembretes } from '@/services/lembretes';
+import { useIdConta } from '@/sessao/SessaoContext';
+import { agendarLembretes, cancelarLembretes, cancelarTodosLembretes, configurarLembretes, pedirPermissaoLembretes, reagendarLembretes } from '@/services/lembretes';
 
 import { apagarTodasRotinas, gravarRotinas, lerRotinas } from './armazenamento';
 import { MAX_ROTINAS, normalizarHora, validarRotina, type DadosRotina, type Rotina } from './tipos';
@@ -27,22 +28,29 @@ function novoId(): string {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** Rotina da semana (FN-17, D-31): só no aparelho, nunca enviada nem vinculada à conta (US-22 AC3). */
+/** Rotina da semana (FN-17, D-31): só no aparelho e nunca enviada; separada por conta (D-40, revê US-22 AC3). */
 export function RotinaProvider({ children }: { children: React.ReactNode }) {
+  const conta = useIdConta();
   const [rotinas, setRotinas] = useState<Rotina[]>([]);
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
     let ativo = true;
-    void lerRotinas().then((lidas) => { if (ativo) { setRotinas(lidas); setCarregado(true); } });
+    void lerRotinas(conta).then((lidas) => {
+      if (!ativo) return;
+      setRotinas(lidas);
+      setCarregado(true);
+      // Os lembretes do aparelho passam a ser só os desta conta.
+      void reagendarLembretes(lidas);
+    });
     void configurarLembretes().catch(() => undefined);
     return () => { ativo = false; };
-  }, []);
+  }, [conta]);
 
   const persistir = useCallback(async (proximas: Rotina[]) => {
-    await gravarRotinas(proximas);
+    await gravarRotinas(conta, proximas);
     setRotinas(proximas);
-  }, []);
+  }, [conta]);
 
   /** Programa ou cancela o lembrete conforme a rotina esteja ativa. A permissão só é pedida aqui, ao ativar (AC4). */
   const sincronizar = useCallback(async (r: Rotina): Promise<ResultadoRotina> => {
@@ -89,9 +97,9 @@ export function RotinaProvider({ children }: { children: React.ReactNode }) {
 
   const apagarTodas = useCallback(async () => {
     setRotinas([]);
-    await apagarTodasRotinas();
+    await apagarTodasRotinas(conta);
     await cancelarTodosLembretes().catch(() => undefined);
-  }, []);
+  }, [conta]);
 
   const valor = useMemo(() => ({ rotinas, carregado, salvar, alternar, apagar, apagarTodas }), [rotinas, carregado, salvar, alternar, apagar, apagarTodas]);
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;

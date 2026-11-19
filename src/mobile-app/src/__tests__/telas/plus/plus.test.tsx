@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { chaveDaConta, SEM_CONTA } from '@/sessao/escopo';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import * as SecureStore from 'expo-secure-store';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
@@ -58,7 +59,7 @@ describe('VoltaSegura+ em simulação (D-36)', () => {
     mockBack.mockClear();
     escritas.mockClear();
     apagadas.mockClear();
-    await SecureStore.deleteItemAsync('voltasegura.plus');
+    await SecureStore.deleteItemAsync(chaveDaConta('voltasegura.plus', SEM_CONTA));
     apagadas.mockClear();
   });
 
@@ -72,7 +73,7 @@ describe('VoltaSegura+ em simulação (D-36)', () => {
   });
 
   it('a aba Plus mostra a home (e não os planos) quando há assinatura simulada', async () => {
-    await gravarAssinatura({ plano: 'mensal', inicio: new Date().toISOString() });
+    await gravarAssinatura(SEM_CONTA, { plano: 'mensal', inicio: new Date().toISOString() });
     await render(comAssinatura(<Plus />));
     await waitFor(() => expect(screen.getByText(textos.plus.gerenciar)).toBeTruthy());
     expect(screen.queryByText(textos.plus.testar)).toBeNull();
@@ -84,20 +85,20 @@ describe('VoltaSegura+ em simulação (D-36)', () => {
     expect(screen.getByText(textos.plus.planoAnual.valorMes)).toBeTruthy();
     await fireEvent.press(screen.getByTestId('confirmar-teste'));
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/plus/home'));
-    expect(escritas).toHaveBeenCalledWith('voltasegura.plus', expect.any(String));
+    expect(escritas).toHaveBeenCalledWith(chaveDaConta('voltasegura.plus', SEM_CONTA), expect.any(String));
     const gravado = String(escritas.mock.calls[0][1]);
     expect(gravado).not.toMatch(/R\$/);
     expect(JSON.parse(gravado)).toEqual({ plano: 'anual', inicio: expect.any(String) });
   });
 
   it('cancelar a assinatura apaga o registro e volta à aba Plus', async () => {
-    await gravarAssinatura({ plano: 'mensal', inicio: new Date().toISOString() });
+    await gravarAssinatura(SEM_CONTA, { plano: 'mensal', inicio: new Date().toISOString() });
     await render(comAssinatura(<Assinatura />));
     await waitFor(() => expect(screen.getByText(textos.plus.cancelarPlano)).toBeTruthy());
     await fireEvent.press(screen.getByText(textos.plus.cancelarPlano));
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/plus'));
-    expect(apagadas).toHaveBeenCalledWith('voltasegura.plus');
-    expect(await lerAssinatura()).toBeNull();
+    expect(apagadas).toHaveBeenCalledWith(chaveDaConta('voltasegura.plus', SEM_CONTA));
+    expect(await lerAssinatura(SEM_CONTA)).toBeNull();
   });
 
   it('radar mostra a alternativa como exemplo e "manter" só volta', async () => {
@@ -111,7 +112,7 @@ describe('VoltaSegura+ em simulação (D-36)', () => {
 
 describe('aba Contatos (só nomes, no aparelho)', () => {
   beforeEach(async () => {
-    await SecureStore.deleteItemAsync('voltasegura.contatos');
+    await SecureStore.deleteItemAsync(chaveDaConta('voltasegura.contatos', SEM_CONTA));
   });
 
   it('salva um nome no aparelho e recusa nome vazio', async () => {
@@ -121,7 +122,7 @@ describe('aba Contatos (só nomes, no aparelho)', () => {
 
     await fireEvent.changeText(screen.getByTestId('contato-nome'), 'Mãe');
     await fireEvent.press(screen.getByText(textos.abas.contatos.salvar));
-    expect(await lerContatos()).toEqual([expect.objectContaining({ nome: 'Mãe' })]);
-    expect((await lerContatos())[0]).not.toHaveProperty('telefone');
+    expect(await lerContatos(SEM_CONTA)).toEqual([expect.objectContaining({ nome: 'Mãe' })]);
+    expect((await lerContatos(SEM_CONTA))[0]).not.toHaveProperty('telefone');
   });
 });

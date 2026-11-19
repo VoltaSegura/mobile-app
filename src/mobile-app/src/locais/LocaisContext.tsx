@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import type { Ponto } from '@/consulta';
+import { useIdConta } from '@/sessao/SessaoContext';
 
 import { apagarTodosLocais, gravarLocais, lerLocais, normalizarEndereco, normalizarNome } from './armazenamento';
 import { MAX_LOCAIS, type LocalSalvo, type TipoLocal } from './tipos';
@@ -24,21 +25,22 @@ function novoId(): string {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** Locais salvos (FN-13): só no aparelho, nunca enviados (US-04 AC5). */
+/** Locais salvos (FN-13): só no aparelho, separados por conta (D-40), nunca enviados (US-04 AC5). */
 export function LocaisProvider({ children }: { children: React.ReactNode }) {
+  const conta = useIdConta();
   const [locais, setLocais] = useState<LocalSalvo[]>([]);
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
     let ativo = true;
-    void lerLocais().then((lidos) => { if (ativo) { setLocais(lidos); setCarregado(true); } });
+    void lerLocais(conta).then((lidos) => { if (ativo) { setLocais(lidos); setCarregado(true); } });
     return () => { ativo = false; };
-  }, []);
+  }, [conta]);
 
   const persistir = useCallback(async (proximos: LocalSalvo[]) => {
-    await gravarLocais(proximos);
+    await gravarLocais(conta, proximos);
     setLocais(proximos);
-  }, []);
+  }, [conta]);
 
   const salvar = useCallback(async (nome: string, ponto: Ponto, tipo: TipoLocal, endereco?: string): Promise<ResultadoSalvar> => {
     const limpo = normalizarNome(nome);
@@ -82,7 +84,7 @@ export function LocaisProvider({ children }: { children: React.ReactNode }) {
     }
   }, [locais, persistir]);
 
-  const apagarTodos = useCallback(async () => { setLocais([]); await apagarTodosLocais(); }, []);
+  const apagarTodos = useCallback(async () => { setLocais([]); await apagarTodosLocais(conta); }, [conta]);
 
   const valor = useMemo(() => ({ locais, carregado, salvar, renomear, atualizarEndereco, apagar, restaurar, apagarTodos }), [locais, carregado, salvar, renomear, atualizarEndereco, apagar, restaurar, apagarTodos]);
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
