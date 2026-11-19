@@ -1,0 +1,12 @@
+{
+  "name": "voltasegura-mobile-app",
+  "private": true,
+  "description": "Atalhos: os scripts rodam em src/mobile-app (onde fica o app Expo).",
+  "scripts": {
+    "setup": "npm --prefix src/mobile-app run setup --",
+    "otp2": "npm --prefix src/mobile-app run otp2 --",
+    "celular": "npm --prefix src/mobile-app run celular --",
+    "start": "npm --prefix src/mobile-app run start --",
+    "test": "npm --prefix src/mobile-app run test --"
+  }
+}

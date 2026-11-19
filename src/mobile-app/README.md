@@ -75,6 +75,8 @@ O celular precisa alcançar o computador pela rede local. Por isso os dois têm 
 | **Grafo** (`graph.obj`) | Ruas e transporte já processados pelo OTP2. É montado uma vez e reaproveitado; servidor sobe em segundos | O script monta |
 | **Neon** (nuvem, nada a instalar) | Login (Neon Auth) e Postgres com os registros públicos da SSP-SP e a função que calcula a exposição estimada de cada trajeto | Já está no ar. O setup grava as URLs públicas (`scripts/setup/neon-publico.json`, sem segredo) |
 
+> **Onde rodar os comandos:** o app fica em `src/mobile-app`, e todos os comandos abaixo rodam nessa pasta (`cd src/mobile-app`). No repositório de entrega [VoltaSegura/mobile-app](https://github.com/VoltaSegura/mobile-app), `npm run setup`, `npm run otp2` e `npm run celular` também funcionam direto da raiz, porque o `package.json` de lá repassa os comandos para `src/mobile-app`. Na raiz do monorepo não há esse atalho. Se aparecer `Missing script: "setup"`, você está na pasta errada.
+
 ### Opção A: modo mock (sem servidor)
 
 ```bash
