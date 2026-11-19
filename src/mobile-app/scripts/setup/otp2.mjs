@@ -213,7 +213,7 @@ async function garantirMapa(pasta) {
   const sudeste = path.join(pasta, 'sudeste-latest.osm.pbf');
   await baixar(URL_OSM, sudeste, 'OpenStreetMap do Sudeste (~860 MB, a parte mais demorada)');
   const python = pythonComOsmium(pasta);
-  console.log('  [..] recortando o mapa para o município de São Paulo (alguns minutos)');
+  console.log('  [..] recortando o mapa para o município de São Paulo (pode passar de 15 min; o progresso aparece abaixo)');
   execFileSync(python, [path.join(PASTA_SCRIPT, 'recortar_osm.py'), sudeste, recorte], { stdio: 'inherit' });
   fs.rmSync(sudeste); // o OTP2 leria os dois .pbf; só o recorte deve ficar na pasta
   ok('sao-paulo.osm.pbf pronto');
