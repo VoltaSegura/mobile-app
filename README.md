@@ -116,6 +116,7 @@ Arquivo: `scripts/setup/setup.mjs`. O script segue estes passos e para com uma m
 | `npm run setup -- --modo mock` | Só o app com dados de exemplo, sem Java e sem OTP2 |
 | `npm run setup -- --so-ip` | Trocou de rede: atualiza só o IP no `.env.local` |
 | `npm run setup -- --ip 192.168.0.20` | A detecção escolheu o IP errado |
+| `npm run setup -- --dados <pasta>` | Você já tem os arquivos do OTP2 (jar, GTFS, mapa e `graph.obj`) em outra pasta: nada é baixado de novo |
 
 #### 2. `npm run otp2`: sobe o servidor de trajetos (terminal 1)
 
@@ -163,6 +164,7 @@ Roda `setup --so-ip` e depois `expo start -c`:
 | A detecção pegou o IP errado | `npm run setup -- --ip <seu IPv4>` (veja o IP com `ipconfig` no Windows) |
 | A montagem do grafo parou com `OutOfMemoryError` | Feche outros programas e rode `npm run otp2 -- --memoria 12G` |
 | O app mostra trajetos, mas sem a exposição estimada | Entre com uma conta. Confira se o `.env.local` tem `EXPO_PUBLIC_NEON_AUTH_URL` e `EXPO_PUBLIC_DATA_API_URL` |
+| `[erro] fetch failed` ou `UND_ERR_CONNECT_TIMEOUT` durante um download | A conexão demorou para abrir. Os downloads tentam até 5 vezes; se ainda falhar, confira a internet (a rede da faculdade ou uma VPN podem bloquear) e rode de novo. O que já foi baixado não é baixado outra vez |
 | O Java não foi encontrado depois de instalar | Feche e reabra o terminal, para recarregar o `PATH`, e rode de novo |
 
 Em desenvolvimento, o terminal do Expo mostra cada consulta ao OTP2 (`[otp2] ...`), sem as coordenadas da pessoa. Para testar no navegador, use `npx expo start --web`. Nunca coloque `DATABASE_URL` nem outro segredo em `EXPO_PUBLIC_*`. O modo `api` para trajetos depende de alinhar o contrato com o backend (PL-18).

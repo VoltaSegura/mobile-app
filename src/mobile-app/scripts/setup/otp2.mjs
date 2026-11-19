@@ -130,8 +130,32 @@ async function baixar(url, destino, descricao) {
     return;
   }
   console.log(`  [..] baixando ${descricao}`);
+  // Em redes lentas a conexão pode levar perto de 10 s para abrir, que é o limite do fetch do Node
+  // (UND_ERR_CONNECT_TIMEOUT). Por isso tentamos de novo antes de desistir.
+  const TENTATIVAS = 5;
+  for (let tentativa = 1; ; tentativa++) {
+    try {
+      await baixarUmaVez(url, destino);
+      return;
+    } catch (e) {
+      const causa = e?.cause?.code ?? e?.cause?.message ?? e?.message ?? String(e);
+      fs.rmSync(`${destino}.parcial`, { force: true });
+      if (tentativa >= TENTATIVAS) {
+        falhar(
+          `Download falhou depois de ${TENTATIVAS} tentativas (${causa}): ${url}\n` +
+            '  Confira a internet (rede da faculdade ou VPN podem bloquear) e rode de novo.\n' +
+            '  Se já tiver os arquivos do OTP2 em outra pasta: npm run otp2 -- --dados <pasta>',
+        );
+      }
+      aviso(`Tentativa ${tentativa} de ${TENTATIVAS} falhou (${causa}); tentando de novo em ${tentativa * 3} s.`);
+      await new Promise((r) => setTimeout(r, tentativa * 3000));
+    }
+  }
+}
+
+async function baixarUmaVez(url, destino) {
   const resposta = await fetch(url, { headers: { 'User-Agent': 'voltasegura-setup' } });
-  if (!resposta.ok || !resposta.body) falhar(`Download falhou (HTTP ${resposta.status}): ${url}`);
+  if (!resposta.ok || !resposta.body) throw new Error(`HTTP ${resposta.status}`);
   const total = Number(resposta.headers.get('content-length') ?? 0);
   let baixado = 0;
   let ultimo = 0;

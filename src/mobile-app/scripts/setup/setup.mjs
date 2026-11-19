@@ -94,7 +94,9 @@ function escreverEnv(ip, soIp) {
 }
 
 function prepararOtp2() {
-  const r = spawnSync(process.execPath, [path.join(PASTA_SCRIPT, 'otp2.mjs'), 'preparar'], { stdio: 'inherit' });
+  // Repassa --dados e --memoria para o otp2.mjs (ex.: reaproveitar uma pasta que já tem o graph.obj).
+  const extras = ['dados', 'memoria'].flatMap((chave) => (typeof args[chave] === 'string' ? [`--${chave}`, args[chave]] : []));
+  const r = spawnSync(process.execPath, [path.join(PASTA_SCRIPT, 'otp2.mjs'), 'preparar', ...extras], { stdio: 'inherit' });
   if (r.status !== 0) process.exit(r.status ?? 1);
 }
 
