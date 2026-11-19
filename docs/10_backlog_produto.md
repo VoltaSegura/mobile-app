@@ -123,15 +123,19 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC2.** Dado uma conta excluída, quando tentar entrar com o mesmo e-mail e senha, então o acesso é negado.
 - **AC3.** Dado o pedido de exclusão, quando o usuário cancelar a confirmação, então nada é apagado.
 
-#### F1.4 — Histórico de trajetos só no aparelho · MVP · Mobile
+#### F1.4 — Locais salvos e histórico só no aparelho · MVP · Mobile
+
+> *Título revisto em 19/11/2026 (antes "Histórico de trajetos só no aparelho"), para refletir o que existe no app.*
+>
+> **Status (19/11/2026):** os **locais salvos** estão implementados (aba Locais e escolha do ponto: salvar, usar, renomear na própria linha e apagar com "Desfazer" por 5 s; até 10; só no aparelho, separados por conta; D-29, D-38, D-40). O **histórico de trajetos não foi implementado** (`[EM ABERTO]`, D-24): AC1 a AC3 seguem como critério, mas não há tela para testá-los nesta versão.
 
 **US-04.** Como Ágatha, quero guardar meus trajetos frequentes no celular, se eu quiser, para não digitar tudo de novo, sem que fiquem no servidor.
 
-- **AC1.** Dado o histórico desativado (padrão), quando fizer uma consulta, então nada é salvo no aparelho.
-- **AC2.** Dado o histórico ativado, quando fizer uma consulta, então o trajeto é salvo só no armazenamento local do aparelho.
-- **AC3.** Dado trajetos salvos, quando o usuário apagar um ou todos, então eles somem do aparelho.
-- **AC4.** Em nenhum caso o histórico é enviado ao servidor ou vinculado à conta.
-- **AC5.** `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-02) Locais salvos pela usuária (ex.: "Faculdade", "Casa") seguem as mesmas regras do histórico: ficam só no armazenamento local do aparelho, nunca vão ao servidor e podem ser renomeados ou apagados.
+- **AC1.** Dado o histórico desativado (padrão), quando fizer uma consulta, então nada é salvo no aparelho. *(Histórico não implementado nesta versão.)*
+- **AC2.** Dado o histórico ativado, quando fizer uma consulta, então o trajeto é salvo só no armazenamento local do aparelho. *(Histórico não implementado nesta versão.)*
+- **AC3.** Dado trajetos salvos, quando o usuário apagar um ou todos, então eles somem do aparelho. *(Histórico não implementado nesta versão.)*
+- **AC4.** Em nenhum caso o histórico ou os locais salvos são enviados ao servidor. *(19/11/2026, D-40: no aparelho, ficam separados por conta; antes "nem vinculado à conta".)*
+- **AC5.** `[DECISÃO — 13/11/2026]` (`docs/app-map/01_decisoes.md`, D-02) Locais salvos pela usuária (ex.: "Faculdade", "Casa") seguem as mesmas regras do histórico: ficam só no armazenamento local do aparelho, nunca vão ao servidor e podem ser renomeados ou apagados. *(19/11/2026, D-38: até 10 locais; renomear na própria linha da aba Locais e apagar com "Desfazer" por 5 s.)*
 
 #### F1.5 — Localização atual opcional · MVP · Mobile
 
@@ -154,6 +158,8 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC5.** `[DECISÃO — 13/11/2026]` (D-02) Origem e destino são escolhidos tocando no mapa, usando a localização atual (US-05), num local salvo no aparelho (US-04 AC5) ou num ponto de exemplo, rotulado como exemplo (RNF-08). Não há busca de endereço em serviço externo (US-19 AC3).
 
 #### F2.2 — Planejar ida e volta separadamente · MVP · Mobile · `[DECISÃO]`
+
+> **Status (19/11/2026): sem entrada na interface.** Desde a D-39, "Planejar a volta" saiu da tela de resultado e do detalhe da rota. A lógica de inversão continua no código (`src/mobile-app/src/consulta/planejarVolta.ts`), mas nenhuma tela leva até ela. O novo caminho da volta está `[EM ABERTO]` (FL-08). Até essa decisão, os Test Cases desta Feature ficam bloqueados.
 
 **US-07.** Como Ágatha, quero planejar a volta com o horário em que saio da faculdade, separada da ida, porque as condições mudam conforme a hora.
 
@@ -181,11 +187,13 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 > **Status (15/11/2026): protótipo com mock.** Telas, indicador global e deep link existem no app, com serviço de exemplo em memória (sem backend real e sem GPS em segundo plano; PL-18 e PL-24 seguem abertos).
 >
+> **Entrada (19/11/2026, D-39):** o botão de compartilhar fica na tela **Seguir rota** (F2.6), e não mais no detalhe da rota.
+>
 > **Depende do tempo (D-22):** previsto para o protótipo de 19/11. Se o prazo apertar, a construção é cancelada e fica para depois, sem afetar as demais features. É **nativa e gratuita** (não entra no premium).
 
 **US-21.** Como Ágatha, quero compartilhar minha rota e minha localização com uma pessoa de confiança durante a volta, para que ela acompanhe minha viagem até eu chegar.
 
-- **AC1.** Dado uma rota escolhida, quando tocar em "Compartilhar minha volta" e confirmar, então o app inicia uma sessão e gera um **link temporário** para enviar ao contato.
+- **AC1.** Dado uma rota escolhida, quando tocar em "Compartilhar minha volta" e confirmar, então o app inicia uma sessão e gera um **link temporário** para enviar ao contato. *(19/11/2026, D-39: o botão fica na tela Seguir rota.)*
 - **AC2.** Antes de iniciar, o app informa o que o contato verá (trajeto, posição atual, chegada estimada) e quando o compartilhamento termina.
 - **AC3.** Durante a sessão, um indicador fica sempre visível, com o botão "Parar". Ao parar, a posição deixa de ser enviada e o link expira.
 - **AC4.** A sessão termina sozinha na chegada ao destino ou ao fim de um tempo máximo.
@@ -198,18 +206,31 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 
 #### F2.6 — Seguir rota (navegação no trajeto) · MVP · Mobile · `[DECISÃO — 18/11/2026]` (`docs/app-map/01_decisoes.md`, D-34; revê D-04 e US-05 AC3)
 
-> **Status (18/11/2026):** Fases 1 (primeiro plano), 2 (recálculo ao desviar) e 3 (segundo plano opcional) implementadas no código, com 71 testes passando em 18/11/2026; sem commit e sem validação no aparelho. Decisões em aberto: PL-28 a PL-32 (`docs/app-map/12_pendencias_e_lacunas.md`). Prazo de cada fase `[EM ABERTO]`; se o prazo de 19/11 apertar, aplica-se a D-22.
+> **Status (19/11/2026):** Fases 1 (primeiro plano) e 3 (segundo plano com sessão ativa) validadas no celular em 18/11/2026; Fase 2 (recálculo ao desviar) implementada no código e nos testes, sem validação no aparelho (PL-26). Código com commit em 19/11/2026. Em aberto: rótulo do botão (D-34 item 8), logs do roteador (D-34 item 6) e horário do recálculo (PL-30).
 
 **US-23.** Como Ágatha, quero acompanhar minha posição no trajeto escolhido enquanto caminho ou sigo de transporte, para saber o próximo passo sem conferir o mapa a cada trecho.
 
 - **AC1.** Dado uma rota escolhida, quando tocar em "Seguir esta rota" e depois em "Começar", então o app pede a permissão de localização (se ainda não concedida), mostra a posição no trajeto, o trecho atual e o próximo passo. Antes desse toque, o app não lê a posição.
 - **AC2.** Antes de começar, o app informa que a posição fica neste aparelho, a não ser que a pessoa esteja compartilhando a viagem (D-21, F2.5), e que ela pode encerrar a qualquer momento.
 - **AC3.** Durante a sessão, um indicador fica visível, com o botão "Parar" (alvo de pelo menos 48 dp). O indicador não pode ser ocultado (D-20). `[EM ABERTO]` Rótulo do botão: o app usa "Encerrar" hoje (D-34, item 8).
-- **AC4.** A sessão termina sozinha ao chegar ao destino ou ao fim de um tempo máximo `[EM ABERTO]` (valor do tempo máximo e raio de chegada, D-34, item 7).
+- **AC4.** `[DECISÃO — 18/11/2026]` (D-34 item 7) A sessão termina quando a pessoa toca em "Encerrar" ou quando chega ao destino (posição a até **100 m** do fim). **Sem tempo máximo** na Seguir rota. *(Antes: tempo máximo `[EM ABERTO]`.)*
 - **AC5.** Sem histórico: o trajeto percorrido e as posições não são guardados no aparelho nem enviados ao servidor. Ao encerrar, nada da sessão permanece (D-20, D-21).
 - **AC6.** Com a sessão ativa e a tela desligada ou o app em segundo plano (Fase 3), a leitura continua só enquanto a sessão durar e com o indicador visível. `[HIPÓTESE]` Depende do GPS em segundo plano no Expo Go (PL-24).
-- **AC7.** Ao sair do trajeto, o app avisa e oferece voltar ao resultado. O recálculo a partir da posição atual (Fase 2) fica `[EM ABERTO]`: a posição não pode ir a um serviço fora do aparelho sem decisão, por causa da D-21 (D-34, item 6).
+- **AC7.** `[DECISÃO — 18/11/2026]` (D-34 itens 5 e 6) Confirmado o desvio (várias leituras seguidas fora do trajeto), o app recalcula a rota a partir da posição atual, com o mesmo destino. Só aceita uma rota com a mesma sequência de modos e que termine a até 100 m do fim anterior; sem candidata válida, mantém a rota anterior e oferece "Tentar de novo". Exceção à D-21: a posição vai só ao roteador do projeto, só nessa consulta, sem ser guardada. `[EM ABERTO]` Logs do servidor de roteamento. *(Antes: recálculo `[EM ABERTO]`.)*
 - **AC8.** Nenhum texto apresenta a navegação como garantia de segurança nem diz que o trajeto é "seguro" (`docs/05`, RNF-01).
+
+#### F2.7 — Contatos de confiança · MVP · Mobile · `[DECISÃO — 19/11/2026]` (`docs/app-map/01_decisoes.md`, D-36 item 6 e D-40; FN-22, TL-27)
+
+> **Status (19/11/2026):** implementada (aba Contatos), com testes de unidade e de tela, validada no aparelho junto com o redesign (T25). Incluída no backlog em 19/11/2026 na revisão das Features de QA (T10).
+
+**US-24.** Como Ágatha, quero guardar no app os nomes das pessoas de confiança, para tê-las à mão quando quiser avisar alguém sobre a minha volta.
+
+- **AC1.** Dado a aba Contatos, quando a usuária adicionar um nome (ex.: "Mãe"), então ele aparece na lista e fica salvo **só no aparelho** (armazenamento cifrado), separado por conta (D-40).
+- **AC2.** Dado um nome vazio, quando tentar adicionar, então o app recusa e informa o motivo. A lista aceita até **10** contatos.
+- **AC3.** Dado um contato salvo, quando a usuária removê-lo, então ele some da lista e do aparelho.
+- **AC4.** O app guarda **só o nome**: não pede telefone, e-mail nem conta do contato.
+- **AC5.** A lista **não envia nada sozinha**. Qualquer envio é uma ação da pessoa, com confirmação (D-19, D-21).
+- `[EM ABERTO]` Como um contato entra no compartilhamento (F2.5) e na rotina (F7.1) (PL-34).
 
 ### E3 — Comparação de exposição estimada
 
@@ -331,9 +352,23 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 - **AC2.** Dado uma rotina ativa, quando chegar o horário do aviso, então o app envia uma notificação local antes da saída. `[DECISÃO — 15/11/2026]` (D-31) O gatilho é um **lembrete por horário**: N minutos antes da saída (padrão 15), nos dias da rotina, **sem tempo real e sem servidor**. Texto: "Hora de sair: sua rotina de {dia} às {hora}. Compare os caminhos antes de sair." Tocar na notificação abre a tela inicial com origem, destino e saída da rotina. `[HIPÓTESE]` antecedência de 5, 10, 15 ou 30 min; até 5 rotinas; origem e destino entre os lugares salvos.
 - **AC3.** A rotina pode ser editada, desativada e apagada, e nunca é enviada ao servidor; fica separada por conta no aparelho (DT-08, D-40).
 - **AC4.** Dado a permissão de notificações negada, então o app informa que o aviso não será enviado e a rotina continua salva.
-- **AC5.** Nenhum texto promete segurança ou usa "rota segura" (RNF-01); a tela identifica o VoltaSegura+ como recurso em validação, sem preço.
+- **AC5.** Nenhum texto promete segurança ou usa "rota segura" (RNF-01); a tela identifica o VoltaSegura+ como recurso em validação. *(19/11/2026, D-36: o preço passa a aparecer só como simulação, ver F7.2; antes "sem preço".)*
 - `[DECISÃO — 15/11/2026]` O aviso **não** informa mudança no resultado: só o horário (sem tempo real).
 - `[EM ABERTO]` Cobrança real; aviso com dados em tempo real (roadmap, P-08).
+
+#### F7.2 — VoltaSegura+ em simulação · MVP · Mobile · `[DECISÃO — 19/11/2026]` (`docs/app-map/01_decisoes.md`, D-36, D-38 e D-40; FN-21, TL-19 a TL-25)
+
+> **Status (19/11/2026):** implementada (aba Plus), com testes de unidade e de tela, validada no aparelho junto com o redesign (T25). É **demonstração**: nada é cobrado. Incluída no backlog em 19/11/2026 na revisão das Features de QA (T10). O modelo freemium segue `[HIPÓTESE]` (seção 4).
+
+**US-25.** Como Ágatha, quero conhecer os planos do VoltaSegura+ e ver como o recurso funcionaria, para decidir se ele ajuda na minha rotina de volta.
+
+- **AC1.** Dado nenhuma assinatura, quando abrir a aba Plus, então o app mostra os planos (mensal R$ 9,90/mês e anual R$ 99/ano) com teste de 7 dias e o selo "Demonstração: nenhuma cobrança real" (D-36 item 1).
+- **AC2.** Quando escolher um plano e confirmar o teste, o app **não** pede dados de pagamento, **não** cobra e **não** envia nada ao servidor. Guarda no aparelho só o plano e a data de início, separados por conta (D-38 item 3, D-40).
+- **AC3.** Dado uma assinatura simulada, quando abrir a aba Plus, então o app mostra a home do VoltaSegura+ com todas as rotinas do aparelho (até 5), sem alterá-las nem enviá-las (D-36 item 3, D-38 item 4).
+- **AC4.** Radar, resumo e os números da volta pronta usam dados fixos, identificados com o selo EXEMPLO, e não consultam o servidor (D-36 item 2, RNF-08). O radar nunca muda a rota sozinho.
+- **AC5.** Em gerenciar assinatura, cancelar apaga o registro do aparelho e a aba Plus volta a mostrar os planos (D-38 item 3).
+- **AC6.** Nenhum texto promete segurança (RNF-01). O radar fala em "aviso" e "obra recente", não em "ocorrência" no trajeto (D-36 item 8). O botão "Compartilhar com um toque" da volta pronta fica desabilitado (PL-37).
+- `[EM ABERTO]` Cobrança real; PL-35 a PL-37.
 
 ## 7. Requisitos não funcionais
 
@@ -343,7 +378,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 | RNF-02 | Não rotular bairros ou territórios inteiros; trabalhar só com trechos. | Nenhuma tela ou endpoint classifica bairro | `docs/05` |
 | RNF-03 | Ausência de registro nunca vira pontuação positiva. | Casos com `N = 0` não geram destaque por si só | `docs/05`, `docs/08` |
 | RNF-04 | Confiança dos dados exibida separada da exposição estimada. | Bloco "Sobre os dados" presente em toda comparação | `docs/05`, `docs/08` |
-| RNF-05 | Privacidade desde a concepção e minimização (LGPD). | F1.1, F1.3, F1.4, F6.1 | `docs/03` §6 |
+| RNF-05 | Privacidade desde a concepção e minimização (LGPD). | F1.1, F1.3, F1.4, F2.7, F6.1, F7.2 | `docs/03` §6 |
 | RNF-06 | Não transferir ao usuário a responsabilidade por uma ocorrência. | Nenhum texto sugere culpa do usuário pela escolha | `docs/03` §6, `docs/05` |
 | RNF-07 | Acessibilidade no app (critério da rubrica de Mobile). | Rótulos de acessibilidade, contraste e tamanho de toque nas telas | `docs/02` §5 |
 | RNF-08 | Dados de exemplo identificados como tal (ex.: tempos 32/38 min do mockup). | Telas e slides com aviso de exemplo | `docs/05` |
@@ -414,6 +449,7 @@ Formato das histórias: "Como [persona], quero [ação], para [benefício]". Cri
 |---|---|---|---|
 | 15/11/2026 | 1.9 | Alinhamento ao roteiro do pitch (`TODO.md` T23): público amplo (quem volta à noite), modelo freemium individual + empresas, nova F7.1/US-22 (VoltaSegura+, rotina só no aparelho, Depende do tempo), exceção de roadmap em DT-10, P-07 e P-08. IDs mantidos | Lucas Simidu + assistente |
 | 18/11/2026 | 1.11 | Nova F2.6 / US-23 (Seguir rota: navegação no trajeto com a tela ligada na Fase 1; segundo plano só com sessão ativa). Revisa a US-05 AC3 e a linha de navegação ao vivo da seção 8, pela D-34 (que revê a D-04). Recálculo e posição enviada ao roteador `[EM ABERTO]` (D-21). IDs mantidos | Lucas Simidu + assistente |
+| 19/11/2026 | 1.13 | Revisão das Features de QA (T10) contra o app: F1.4 renomeada para "Locais salvos e histórico só no aparelho" (histórico não implementado, D-24); F2.2 sem entrada na interface (D-39, FL-08 `[EM ABERTO]`); F2.5 com entrada pela Seguir rota (D-39); F2.6 com status de 19/11 e AC4/AC7 alinhados à D-34 itens 5 a 7; F7.1 AC5 alinhado à D-36; novas F2.7 / US-24 (contatos de confiança, FN-22) e F7.2 / US-25 (VoltaSegura+ em simulação, FN-21). IDs mantidos | Lucas Simidu + assistente |
 | 19/11/2026 | 1.12 | Novos itens de roadmap: P-09 (ampliação territorial do piloto, SP → grandes regiões do estado → outros estados) e P-10 (sinalização de infraestrutura pelos usuários); P-07 com condições de moderação, antifraude e anonimização. IDs mantidos | Lucas Simidu + assistente |
 | 15/11/2026 | 1.10 | F7.1/US-22 detalhada: gatilho decidido (lembrete local por horário, sem tempo real, texto neutro, aviso não informa mudança no resultado), mapeada em FL-17, TL-16, TL-17 e FN-17; implementada. IDs mantidos | Lucas Simidu + assistente |
 | 14/11/2026 | 1.8 | US-03 / F1.3 (exclusão de conta) adiada por ora pela D-25: fora do MVP, critérios preservados; IDs mantidos | Lucas Simidu + assistente |

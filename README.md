@@ -34,7 +34,7 @@ O VoltaSegura **não garante segurança, não prevê crimes e não classifica ba
 - **Jornada principal:** planejar a ida ou a volta, ver as alternativas com exposição estimada e confiança dos dados, abrir o detalhe e o "por que esta rota" e consultar a origem dos dados.
 - **Acompanhamento:** seguir rota com recálculo quando a pessoa sai do trajeto.
 - **Conta:** cadastro e login pelo Neon Auth.
-- **Dados no aparelho:** lugares salvos, contatos e tema (Sistema, Claro ou Escuro).
+- **Dados no aparelho, separados por conta:** lugares salvos, contatos, rotinas do VoltaSegura+, assinatura simulada e tema (Sistema, Claro ou Escuro). Cada conta vê só os seus dados no aparelho.
 - **VoltaSegura+:** em modo **simulação, sem cobrança**.
 - **Dados de exemplo:** sem servidor, o app usa cenários marcados como **EXEMPLO**.
 
@@ -184,12 +184,57 @@ Em desenvolvimento, o terminal do Expo mostra cada consulta ao OTP2 (`[otp2] ...
 | Dependências Expo | `npx expo-doctor` |
 | Exportação | `npx expo export --platform web` ou `--platform android` |
 
-Rodada de 19/11/2026: TypeScript e ESLint sem erros e **857 testes em 63 suítes** passando. A arquitetura está em [ARQUITETURA.md](./src/mobile-app/ARQUITETURA.md) e as pendências em [todo-mobile.md](./src/mobile-app/todo-mobile.md). No espelho os dois ficam neste repositório; no monorepo, em `src/mobile-app/`.
+Rodada de 19/11/2026: TypeScript e ESLint sem erros e **865 testes em 64 suítes** passando. A arquitetura está em [ARQUITETURA.md](./src/mobile-app/ARQUITETURA.md) e as pendências em [todo-mobile.md](./src/mobile-app/todo-mobile.md). No espelho os dois ficam neste repositório; no monorepo, em `src/mobile-app/`.
+
+## Prints das telas
+
+Quadros do vídeo de demonstração, gravado no celular com o app rodando no Expo Go, na ordem do fluxo: conta, planejar, alternativas, seguir rota, locais, contatos, VoltaSegura+ e perfil. As telas marcadas com **EXEMPLO** usam dados de demonstração, e o VoltaSegura+ é uma simulação sem cobrança. O e-mail da conta de teste foi ocultado.
+
+| | | |
+|---|---|---|
+| ![Criar conta: e-mail, senha e aceite do aviso](./prints/01-criar-conta.jpg) | ![Aviso de privacidade](./prints/02-aviso-privacidade.jpg) | ![Planejar: origem, destino, horário e lugares salvos](./prints/03-planejar.jpg) |
+| **1. Criar conta: e-mail, senha e aceite do aviso** | **2. Aviso de privacidade** | **3. Planejar: origem, destino, horário e lugares salvos** |
+| ![Escolher origem no mapa](./prints/04-escolher-origem.jpg) | ![Salvar um lugar (casa, trabalho, estudo)](./prints/05-salvar-lugar.jpg) | ![Escolher destino no mapa](./prints/06-escolher-destino.jpg) |
+| **4. Escolher origem no mapa** | **5. Salvar um lugar (casa, trabalho, estudo)** | **6. Escolher destino no mapa** |
+| ![Horário de saída](./prints/07-horario-de-saida.jpg) | ![Buscando alternativas](./prints/08-buscando-alternativas.jpg) | ![Alternativas com exposição estimada](./prints/09-alternativas.jpg) |
+| **7. Horário de saída** | **8. Buscando alternativas** | **9. Alternativas com exposição estimada** |
+| ![Detalhe da rota por trecho](./prints/10-detalhe-da-rota.jpg) | ![Por que esta rota?](./prints/11-por-que-esta-rota.jpg) | ![Dados considerados](./prints/12-dados-considerados.jpg) |
+| **10. Detalhe da rota por trecho** | **11. Por que esta rota?** | **12. Dados considerados** |
+| ![Seguir rota: aviso antes de começar](./prints/13-seguir-rota-aviso.jpg) | ![Seguir rota: próximo passo e chegada prevista](./prints/14-seguir-rota.jpg) | ![Compartilhar minha volta](./prints/15-compartilhar-minha-volta.jpg) |
+| **13. Seguir rota: aviso antes de começar** | **14. Seguir rota: próximo passo e chegada prevista** | **15. Compartilhar minha volta** |
+| ![Compartilhando (protótipo com dados de exemplo)](./prints/16-compartilhando.jpg) | ![Seguir rota com o compartilhamento ativo](./prints/17-seguir-rota-compartilhando.jpg) | ![Acompanhamento encerrado](./prints/18-acompanhamento-encerrado.jpg) |
+| **16. Compartilhando (protótipo com dados de exemplo)** | **17. Seguir rota com o compartilhamento ativo** | **18. Acompanhamento encerrado** |
+| ![Locais salvos](./prints/19-locais.jpg) | ![Contatos de confiança](./prints/20-contatos.jpg) | ![VoltaSegura+ (demonstração, sem cobrança)](./prints/21-plus.jpg) |
+| **19. Locais salvos** | **20. Contatos de confiança** | **21. VoltaSegura+ (demonstração, sem cobrança)** |
+| ![Perfil: tema, aviso e sair](./prints/22-perfil.jpg) | ![Começar o teste de 7 dias](./prints/23-plus-teste-gratis.jpg) | ![Planos do VoltaSegura+](./prints/24-plus-planos.jpg) |
+| **22. Perfil: tema, aviso e sair** | **23. Começar o teste de 7 dias** | **24. Planos do VoltaSegura+** |
+| ![Nova rotina: origem, destino e dias](./prints/25-nova-rotina.jpg) | ![Horário de saída da rotina](./prints/26-horario-da-rotina.jpg) | ![VoltaSegura+ com rotina cadastrada](./prints/27-plus-com-rotinas.jpg) |
+| **25. Nova rotina: origem, destino e dias** | **26. Horário de saída da rotina** | **27. VoltaSegura+ com rotina cadastrada** |
+| ![Radar da rota (exemplo)](./prints/28-radar-da-rota.jpg) | ![Gerenciar assinatura](./prints/29-assinatura.jpg) |  |
+| **28. Radar da rota (exemplo)** | **29. Gerenciar assinatura** |  |
+
+## Dados e banco de dados
+
+| O quê | Onde fica | Observação |
+|---|---|---|
+| Conta e sessão | **Neon Auth** (nuvem). A sessão fica no `expo-secure-store` do aparelho | O app só conversa com a URL pública do Neon Auth |
+| Exposição estimada | **Neon Postgres**: registros públicos da SSP-SP e uma função SQL que calcula a exposição de cada trajeto (`scripts/sql/`, importador em `scripts/ssp/`) | Consultada pela Data API do Neon. O app nunca conecta direto no Postgres, e nenhum segredo vai no pacote |
+| Trajetos | **OpenTripPlanner 2** (modo real) ou **dados de exemplo** (modo mock, marcados como EXEMPLO) | Escolha por `EXPO_PUBLIC_API_MODE` |
+| Lugares salvos, contatos, rotinas, assinatura simulada e tema | `expo-secure-store`, **só no aparelho e separados por conta** | Não são enviados ao servidor. Quem entra com outra conta no mesmo aparelho não vê esses dados |
+
+Mais detalhes em [ARQUITETURA.md](./src/mobile-app/ARQUITETURA.md).
+
+## Acessibilidade
+
+- Controles com rótulo e papel para leitores de tela (`accessibilityLabel` e `accessibilityRole`), e testes que localizam os botões por esses rótulos.
+- Alvos de toque grandes, textos que acompanham o tamanho de fonte do sistema e temas Claro, Escuro e Sistema.
+- Informação nunca só por cor: a exposição estimada vem com texto, e a confiança dos dados aparece separada.
+- Linguagem simples e sem promessa de segurança: o app compara alternativas, e quem decide é a pessoa.
 
 ## Evidências para a entrega
 
-- **Prints das telas:** pendentes; serão incluídos após a validação visual no aparelho.
-- **Vídeo de até 3 minutos:** pendente; link a acrescentar depois da gravação.
+- **Vídeo (até 3 minutos) com o app rodando:** [youtu.be/0yP-T0kxxRY](https://youtu.be/0yP-T0kxxRY)
+- **Prints das telas:** seção acima, arquivos em [`prints/`](./prints).
 - **Registro de uso de IA:** [prompts.md](./prompts.md).
 
 Prazo da GS: **19/11/2026, 23h55**. O envio no Teams cabe a um integrante da equipe.

@@ -9,7 +9,7 @@ export const rotina = {
   selo: 'VoltaSegura+ · recurso em validação',
   intro: 'Cadastre um trajeto fixo, com dias e horário de saída. O app avisa antes da hora de sair, para você comparar os caminhos sem repetir a busca.',
   semPreco: 'Sem cobrança durante a validação.',
-  privacidade: 'A rotina fica só neste aparelho. Não é enviada ao servidor nem vinculada à sua conta.',
+  privacidade: 'A rotina fica só neste aparelho. Não é enviada ao servidor, e só a sua conta a vê aqui.',
   lembreteSoHorario: 'O lembrete avisa só o horário. Ele não usa trânsito nem dados em tempo real.',
   vazio: 'Você ainda não tem uma rotina. Crie uma para receber o lembrete antes de sair.',
   nova: 'Nova rotina',
