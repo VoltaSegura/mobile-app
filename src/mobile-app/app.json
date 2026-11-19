@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "VoltaSegura",
+    "slug": "voltasegura",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0D1B2A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "pan"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Permitir que o VoltaSegura use sua localização para mostrar sua posição no trajeto e para escolher o ponto de partida.",
+          "locationAlwaysAndWhenInUsePermission": "Permitir que o VoltaSegura use sua localização também em segundo plano, para seguir sua posição no trajeto com o app fora da tela. Só fica ativo enquanto você acompanha uma rota, e você pode encerrar quando quiser.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      "expo-font",
+      "expo-asset",
+      "expo-notifications"
+    ],
+    "scheme": "voltasegura",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

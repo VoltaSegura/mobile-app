@@ -37,6 +37,13 @@ regra: "Estas regras têm prioridade sobre qualquer outro documento. Verifique T
 | Tratar o nome VoltaSegura como definitivo e pronto para uso comercial | Renomeação recente (10/11/2026); marca/domínio/anterioridade pendentes | "VoltaSegura" com checagens de marca marcadas como pendentes |
 | "PL 1.169/2025 é lei vigente" | Ainda tramitaria | "Projeto de lei em tramitação; verificar estado atual na Câmara" |
 
+## Regras acrescentadas em 15/11/2026 (onda do pitch)
+
+- **Recurso ainda não construído não aparece como disponível** (compartilhamento de trajeto, VoltaSegura+, relatos, agente). Usar "em breve" ou "planejamos", e só afirmar o que existe no protótipo.
+- Evitar "o melhor caminho" (o app não elege rota) e "se antecipar a riscos" como previsão: preferir "comparar caminhos" e "decidir com antecedência".
+- Relatos de infraestrutura (postes, calçadas) não são relatos de crime nem de percepção de segurança, e não entram na comparação de exposição.
+- Estatística de pesquisa nacional ou de outro ano deve indicar o ano e o alcance (ex.: IBGE 2021, Brasil), nunca ser apresentada como retrato de São Paulo hoje.
+
 ## Restrições de produto (verificáveis em código/design)
 
 - **Não** rotular bairros/territórios inteiros — investigar apenas trechos/segmentos com indicadores.
@@ -44,6 +51,7 @@ regra: "Estas regras têm prioridade sobre qualquer outro documento. Verifique T
 - **Não** vender histórico individual de localização **nem** permitir que patrocinadores alterem classificações.
 - **Não** apresentar o produto como transferência de responsabilidade ao usuário por uma ocorrência futura.
 - Em caso de hipótese não testada: rotular como hipótese (não como funcionalidade comprovada).
+- Para registros de violência sexual, seguir a decisão de apresentação em `docs/07_classificacao_ssp_app.md`: panorama municipal apenas em detalhes acessados pelo usuário, sem pino ou associação a uma rua/rota. Não usar esses registros como fator oculto da exposição estimada.
 
 ## Contexto de risco (precedentes que orientam estas regras)
 

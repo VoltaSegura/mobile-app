@@ -2,7 +2,7 @@
 titulo: VoltaSegura — Documento Vivo do Projeto (consolidado)
 projeto: VoltaSegura (produto; ex-"CitizenTech", renomeado em 10/11/2026)
 versao_origem: "0.1 — 09/11/2026"
-atualizado: 2026-11-10
+atualizado: 2026-11-11
 tipo: referencia-produto-estrategia
 convencao_status: "[DECISÃO] direcionamento atual do grupo · [HIPÓTESE] precisa ser testada · [EM ABERTO] não apresentar como feito"
 ---
@@ -45,16 +45,21 @@ Aplicativos de mobilidade priorizam tempo, distância e conveniência, mas não 
 ### Proposta de valor
 Ajudar o usuário a entender as diferenças entre trajetos possíveis — não apenas tempo, mas indicadores disponíveis sobre os trechos, meios de transporte, horário e confiabilidade dos dados.
 
-### Público inicial `[DECISÃO]`
-**Estudantes universitários que retornam para casa à noite**, usando transporte público e caminhadas. Justificativa: rotina recorrente e previsível, testável em uma região delimitada, e conecta público de impacto ao modelo de negócio (universidades como clientes institucionais).
+### Público inicial `[DECISÃO — 15/11/2026, revista pelo roteiro do pitch]`
+**Quem volta para casa à noite** (público amplo): pessoas que saem da aula ou do trabalho, usam transporte público e caminham em parte do trajeto, incluindo estudantes universitários do período noturno e trabalhadores noturnos. O pitch gravado fala de quem sai "da aula ou do trabalho" e cita trabalhadores noturnos.
+- ~~Público inicial só de estudantes universitários noturnos (decisão de 09–11/11/2026).~~ Substituído em 15/11/2026; histórico em `docs/06` (1.44).
+- Atenção: o feedback do professor pedia começar com um perfil prioritário (§2). A persona Ágatha Santos segue como proto-persona de **um** perfil dentro do público amplo, não validada. Trabalhadores noturnos deixam de ser "público futuro".
 
-### Persona de trabalho: **Marina, 22 anos** `[HIPÓTESE — validar via entrevistas]`
+**Abrangência do piloto `[DECISÃO — 11/11/2026]`**: todo o município de São Paulo. O lançamento não fica restrito a um campus ou bairro; a comparação de cada trajeto depende de cobertura e qualidade suficientes, que podem variar dentro da cidade. Trajetos reais em partes diferentes do município servirão como testes iniciais, complementados por avaliação de cobertura em toda a cidade.
+
+### Persona de trabalho: **Ágatha Santos, 24 anos** `[DECISÃO de nome — 11/11/2026 · perfil HIPÓTESE, sem pesquisa]`
 - Estudante universitária do período noturno; usa ônibus, metrô e caminhadas; sai da faculdade tarde; nem sempre conhece bem todos os trechos.
 - **Necessidade principal**: entender as diferenças entre rotas e escolher com mais informação, sem depender só do menor tempo/distância.
 - Obs.: a ficha inicial registrava "Ágatha Santos, 24 anos" — padronizar nome/idade após pesquisa com estudantes.
+- `[DECISÃO — 11/11/2026]` Persona padronizada como **Ágatha Santos, 24 anos** (antes "Marina, 22"). Como o grupo não fará pesquisa com usuários nesta fase, o perfil é uma **proto-persona**: construída pelo grupo, não validada com estudantes, e deve ser apresentada assim.
 
 ### Públicos futuros (não priorizar agora)
-Trabalhadores noturnos · frequentadores de eventos · turistas · outros usuários de transporte público.
+Frequentadores de eventos · turistas · outros usuários de transporte público. *(Trabalhadores noturnos passaram ao público inicial em 15/11/2026.)*
 
 ## 4. Como a solução deve funcionar `[DECISÃO — fluxo]`
 
@@ -66,9 +71,12 @@ Trabalhadores noturnos · frequentadores de eventos · turistas · outros usuár
 
 **Frase de diferenciação em desenvolvimento** `[HIPÓTESE]`: "não mostramos apenas informações sobre riscos; organizamos essas informações para apoiar uma decisão prática de mobilidade."
 
-## 5. Metodologia de exposição estimada `[EM ABERTO — não definir pesos ainda]`
+## 5. Metodologia de exposição estimada `[DECISÃO — regra inicial; calibração EM ABERTO]`
 
-- A classificação **não está definida**. Não inventar pesos nem apresentar índice numérico como validado. **Primeiro auditar as bases** (ver `04_dados_fontes.md`).
+- `[DECISÃO — 10/11/2026]` O **recorte de apresentação** das ocorrências SSP-SP foi fechado: Furto, Roubo e Ocorrências de trânsito são grupos padrão; homicídio doloso, tentativa de homicídio e violência sexual ficam em panorama municipal acessado em “Dados considerados / Detalhes”, sem marcação por rua. Mapeamento exato, inclusões e exclusões em [`07_classificacao_ssp_app.md`](07_classificacao_ssp_app.md).
+- `[DECISÃO — 11/11/2026]` A **conta inicial de comparação criminal** foi definida em [`08_metodologia_comparacao_mvp.md`](08_metodologia_comparacao_mvp.md): para cada alternativa, contar registros elegíveis no corredor dos trechos caminhados, sem dupla contagem (`N`), e dividir pela distância caminhada em quilômetros (`D = N/L`). Usar mesma janela histórica/horária e largura de corredor em X e Y. Somente se `N_X < N_Y` **e** `D_X < D_Y`, com qualidade suficiente, apontar X como alternativa de menor exposição estimada entre as avaliadas; divergência entre as medidas não gera vencedor. Tempo, conexões e infraestrutura são exibidos separadamente, sem pesos arbitrários. A regra ainda **não foi calibrada nem validada** nos dados reais.
+- ~~`[EM ABERTO]` Calibrar largura do corredor, período e faixa horária, cobertura, suficiência amostral e estabilidade da diferença antes de exibir a comparação como resultado do produto.~~ `[DECISÃO — 11/11/2026, após auditoria dos dados SSP-SP 2026]` Parâmetros calibrados em [`08_metodologia_comparacao_mvp.md`](08_metodologia_comparacao_mvp.md): `N` conta boletins distintos de todos os tipos de local; quatro períodos do dia da SSP, sem separar dias úteis e fins de semana; 12 meses de histórico (9 disponíveis no MVP); corredor de ±100 m com sensibilidade em 50/150 m; cobertura ≥ 80%; `N_X + N_Y ≥ 10`; teste binomial bilateral a 5%. `[EM ABERTO]` Validar em trajetos reais e com usuários. Até lá, não apresentar a comparação como validada. Evidência em `src/ml/dados/AUDITORIA_CALIBRACAO_SSP_2026.md`.
+- `[DECISÃO conceitual — 11/11/2026]` Os limites de **privacidade** e de **validade estatística** devem ser avaliados separadamente. A LGPD orienta minimização, proteção e prevenção de reidentificação; ela não define um número mínimo universal de registros para comparar rotas. Não divulgar recortes que possam identificar pessoas. Os limiares quantitativos de suficiência seguem `[EM ABERTO]`.
 - **Abordagem proposta para o MVP**:
   1. Dividir cada rota em segmentos respeitando a granularidade das fontes.
   2. Considerar indicadores disponíveis: ocorrências, período, iluminação, caminhada, conexões, oferta de transporte.
@@ -95,6 +103,44 @@ Riscos documentados em sistemas que rotulam territórios (stigma, vieses) — pr
 7. Não vender histórico individual de localização; patrocinadores não alteram classificações.
 8. Avaliar periodicamente resultados desproporcionais contra determinadas regiões.
 
+### Dados de localização do usuário `[DECISÃO — 11/11/2026, para o MVP; responsáveis e revisão jurídica EM ABERTO]`
+
+Origem, destino e horário das consultas são os dados mais sensíveis do produto: para quem repete o trajeto toda noite, revelam onde mora e qual é a rotina. Usar roteamento em servidor próprio (OTP2, `docs/04` §6) já evita enviar esses dados a serviços externos.
+
+**Decisão para o MVP — pacote mínimo com conta obrigatória (opção A, escolhida pelo Lucas em 11/11/2026):**
+
+1. **Conta obrigatória** (e-mail e senha, ou login Google a confirmar), guardando só e-mail e identificador; sem nome completo, telefone ou endereço. Consentimento e aviso de privacidade no cadastro.
+2. O servidor usa origem, destino e horário só para calcular a resposta e os descarta; as consultas não são armazenadas.
+3. Logs técnicos sem coordenadas nem endereços e **sem vínculo com a conta**, só dados de erro e desempenho. Como a consulta chega autenticada, o servidor não registra consultas por usuário.
+4. Histórico de trajetos apenas no aparelho, opcional e apagável pelo usuário. Não fica vinculado à conta no servidor (isso seria a opção C).
+5. GPS opcional, acionado pelo usuário só para preencher a origem; sem rastreamento contínuo.
+6. Nenhum dado de consulta repassado a universidades no MVP. Relatórios institucionais agregados exigem consentimento e regras próprias em fase posterior.
+7. **Exclusão da conta pelo próprio app**, que apaga tudo o que o servidor tenha sobre a pessoa. Retenção dos dados da conta: enquanto ela existir.
+
+A conta torna e-mail e identificador dados pessoais: exige base legal, aviso de privacidade, exclusão a pedido e segurança do cadastro.
+
+Limitação aceita pela decisão: sem armazenar consultas, a adoção no piloto é medida por entrevistas e não por dados de uso.
+
+`[DECISÃO — 13/11/2026, Lucas Simidu]` **Compartilhamento de trajeto e localização ao vivo** (nativo e gratuito; `docs/app-map/01_decisoes.md` D-19 a D-22). Cria duas exceções, válidas só durante uma sessão de compartilhamento iniciada pela usuária:
+
+- **Item 5:** o GPS é lido em segundo plano enquanto a sessão está ativa, com indicador visível, botão de parar e encerramento automático na chegada ou ao fim de um tempo máximo.
+- **Item 2:** o servidor guarda temporariamente o trajeto e a última posição da sessão para o contato acompanhar pelo app, que é obrigatório para quem recebe, e apaga tudo ao encerrar. Os logs continuam sem coordenadas (item 3).
+
+Fora da sessão, as regras acima valem como estão. A construção está marcada como "Depende do tempo" para a entrega de 19/11.
+
+`[DECISÃO — 15/11/2026]` **Rotina do VoltaSegura+** (cadastrar trajetos fixos e receber avisos antes de sair): fica **só no aparelho**, com notificação local, nos moldes do histórico e dos lugares salvos (item 4). Não vai ao servidor nem se vincula à conta. Avisos que dependam de tempo real ficam para a Fase 2. Isso preserva a fala do pitch "não armazenamos históricos de buscas" (não guardamos em servidor); a opção C de privacidade segue rejeitada.
+
+**Alternativas avaliadas (não adotadas no MVP):**
+
+| Opção | O que muda em relação ao pacote mínimo | Implicações |
+|---|---|---|
+| Mínimo + contadores agregados | O servidor conta uso sem localização (número de consultas por dia e por faixa do dia) | Permite medir adoção no piloto; definir antes quais contadores existem e garantir que não incluam coordenadas, endereços ou identificadores |
+| Conta com histórico no servidor | Trajetos salvos no servidor, vinculados a uma conta (sincronização entre aparelhos) | Exige desde o MVP: base legal e consentimento, prazo de retenção, exclusão a pedido, controle de acesso, criptografia e resposta a incidentes |
+
+`[EM ABERTO]` Responsáveis por acesso e exclusão; provedor de login (e-mail e senha ou Google); base legal exata e revisão jurídica do aviso de privacidade; reavaliar os contadores agregados (opção B) depois do piloto.
+
+`[DECISÃO — 11/11/2026]` (1) **Login por e-mail e senha e também pelo Google**; no Google, pedir só o e-mail e o identificador, sem nome nem foto. (2) **Exclusão de contas e resposta a incidentes: só os desenvolvedores internos do projeto.** (3) **Os dados da conta ficam acessíveis ao próprio usuário** no app; o servidor guarda e-mail e identificador enquanto a conta existir. `[EM ABERTO]` se o grupo quer guardar outras informações além de e-mail e identificador (isso mudaria a decisão de privacidade acima); base legal; revisão jurídica do aviso de privacidade. `[DECISÃO — 11/11/2026]` **Sem revisão jurídica nesta fase**, porque o MVP é acadêmico. Consequências: o aviso de privacidade do protótipo é uma minuta, sem revisão jurídica; nenhum material (app, pitch, slides, entregas) afirma que o produto está "em conformidade com a LGPD"; a revisão jurídica volta a ser obrigatória antes de qualquer uso real. Até o grupo dizer o contrário, o servidor guarda só e-mail e identificador.
+
 > A plataforma apoia a decisão do usuário; **não transfere a ele a responsabilidade por uma ocorrência**. Avisos e termos de uso não substituem projeto responsável, segurança da informação e análise jurídica.
 
 ## 7. Concorrência e diferenciação `[HIPÓTESE de diferenciação — testar]`
@@ -110,15 +156,18 @@ Riscos documentados em sistemas que rotulam territórios (stigma, vieses) — pr
 
 ### Contexto regulatório `[verificar antes de usar em slides]`
 - **PL 1.169/2025**: propõe regras para identificação de áreas de alto risco em apps de navegação. Tramitação encerrada no Senado e enviada à Câmara em 05/11/2025 — **verificar novamente a tramitação; não descrever como lei vigente**.
+  - *Verificado em 11/11/2026* na [ficha da Câmara](https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2581912): recebido em **04/11/2025** (não 05/11) e, desde então, **"Aguardando Despacho do Presidente da Câmara dos Deputados"**, sem comissão nem relator designados. Não é lei. O texto aprovado no Senado (substitutivo do relator na CSP, aprovado em caráter terminativo em 21/10/2025) troca o bloqueio obrigatório de rotas por alertas e não obriga os aplicativos a incorporar as informações ([Agência Senado](https://www12.senado.leg.br/noticias/materias/2025/10/21/vai-a-camara-compartilhamento-de-dados-de-seguranca-com-aplicativos-de-mapas)). Redação sugerida para slides: "projeto de lei aprovado no Senado em 2025, aguardando despacho na Câmara (situação verificada em 11/11/2026)". Como o PL fala em "áreas de alto risco", citá-lo como contexto do debate, sem adotar essa linguagem (`docs/05`).
 
 ### Nome do projeto `[DECISÃO — renomeado em 10/11/2026]`
 O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identidade com o app **Citizen** e dialoga com o propósito (planejamento da **volta** para casa com **segura**nça informacional). Checagens de marca, domínio e busca de anterioridade para "VoltaSegura" continuam `EM ABERTO` — confirmar antes de uso comercial.
 
 ## 8. Modelo de negócio `[HIPÓTESE — não validado financeiramente]`
 
-- **Modelo proposto**: **B2B2C** — o estudante usa a solução; instituições contratam para a comunidade.
-- **Primeiro cliente potencial**: universidades/centros universitários com estudantes do período noturno (licença institucional, divulgação, piloto em campus/região).
-- **Fontes de receita a validar**: licença institucional recorrente · planos para empresas (turnos noturnos) · pacotes por evento · posteriormente, licenciamento de API/painéis agregados.
+- `[HIPÓTESE — 15/11/2026, roteiro do pitch]` **Modelo proposto: freemium individual + empresas.** Comparar rotas e consultar informações no VoltaSegura é **sempre gratuito**. O **VoltaSegura+** (assinatura) permite **cadastrar a rotina e receber avisos antes de sair**. **Empresas com funcionários em turnos noturnos** poderão oferecer o VoltaSegura+ como benefício (canal B2B2C). Sem preço definido e sem validação financeira. Princípio: "o grátis informa, o premium poupa trabalho".
+- ~~**Modelo proposto**: B2B2C com universidades como primeiro cliente (licença institucional).~~ *Substituído em 15/11/2026: as universidades saem do modelo (decisão do grupo na onda do pitch); o piloto segue sem instituição.*
+- **Fontes de receita a validar**: assinatura individual (VoltaSegura+) · planos para empresas (turnos noturnos) · pacotes por evento · posteriormente, licenciamento de API/painéis agregados.
+- `[DECISÃO — 15/11/2026]` O pitch já gravado diz que a comparação será "sempre gratuita" sem a ressalva "modelo a validar" (exceção consciente à regra de `docs/06` §2); a ressalva fica na descrição do vídeo e nos slides.
+- `[DECISÃO]` O nome "premium" também é usado no redesign visual do app (D-28); não confundir com o VoltaSegura+.
 - **Princípio comercial**: **não vender** dados pessoais ou trajetos individuais; relatórios institucionais agregados, anonimizados, com controles de privacidade.
 - **Custos a incluir**: infraestrutura em nuvem, banco, processamento e monitoramento; serviços de mapas/geocodificação/roteamento; integração e manutenção das bases; desenvolvimento, suporte, segurança e LGPD; auditoria da metodologia, testes e atendimento institucional.
 - **Antes de projetar receita**: entrevistar universidades, entender orçamento e processo de contratação, testar disposição a pagar, estimar custo por usuário/campus.
@@ -127,11 +176,13 @@ O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identi
 
 | Fase | Escopo |
 |---|---|
-| **Fase 0 — Viabilidade e descoberta** | Auditar fontes/formatos/granularidade/atualização/licenças; entrevistar estudantes noturnos e universidades; escolher região ou campus do piloto; definir princípios de ética, privacidade e comunicação de incerteza |
+| **Fase 0 — Viabilidade e descoberta** | Auditar fontes/formatos/granularidade/atualização/licenças; entrevistar estudantes noturnos e universidades; validar a cobertura do piloto municipal com trajetos em diferentes partes de São Paulo; definir princípios de ética, privacidade e comunicação de incerteza |
 | **Fase 1 — MVP** | Planejamento de **ida e volta**; rotas multimodais com integração validada; comparação de alternativas por tempo, conexões e indicadores de exposição disponíveis; explicação de fontes, datas e qualidade; orientação passo a passo; indicação de "dados insuficientes" quando aplicável |
 | **Fase 2 — Acompanhamento** | Tempo real de transporte (com fonte confiável); replanejamento diante de mudanças operacionais; compartilhamento opcional de trajeto com consentimento e controles de privacidade |
 | **Fase 3 — Inteligência e personalização** | Indicadores urbanos adicionais; preferências de mobilidade e acessibilidade; assistente de orientação após validação |
 | **Fase 4 — Expansão** | Parcerias (universidades, empresas, eventos); integrações institucionais e API se houver demanda comprovada; outras cidades após validar dados e metodologia localmente |
+
+**Roadmap do pitch `[HIPÓTESE — 15/11/2026]`**: (1) **relatos de infraestrutura** (postes apagados, calçadas sem acessibilidade), com 3 dias de VoltaSegura+ de recompensa; dados anônimos que poderão ajudar a melhorar a cidade; (2) **agente inteligente** que reorganiza trajetos diante de atrasos (depende de tempo real, Fase 2) e **integrações com aplicativos de mobilidade**; ambos a partir do VoltaSegura+. Os relatos são só de infraestrutura, isolados da comparação de exposição; relatos de crime ou de percepção de segurança continuam fora (DT-10). Moderação, antifraude da recompensa, anonimização e destino dos dados `[EM ABERTO]`.
 
 **Fora do escopo inicial**: garantia de segurança, previsão de crimes, lotação de ônibus sem fonte validada, monitoramento individual contínuo, replanejamento em tempo real sem integração confirmada.
 
@@ -141,6 +192,14 @@ O produto passa a se chamar **VoltaSegura**. O nome resolve o conflito de identi
 |---|---|---|
 | 71% | Ipsos-Ipec / Rede Nossa São Paulo — qualidade de vida em SP (2026) | 700 internautas 16+, moradores da capital há 2+ anos; entrevistas em dez/2025 |
 | 63% · 35% · 42% | Instituto Patrícia Galvão / Locomotiva — mulheres e mobilidade noturna (2025) | 1.200 mulheres 18–59 anos que saem à noite para lazer ≥2×/mês |
+
+`[DECISÃO — 15/11/2026]` Os números do **roteiro do pitch** são os principais; os da tabela acima ficam de reserva para slides e relatório. Fichas pesquisadas em 15/11/2026 (confirmar na fonte primária antes de uso formal):
+
+| Indicador | Fonte | Amostra/período | Situação |
+|---|---|---|---|
+| "Mais da metade" se sente insegura andando sozinha à noite (51,7% pela imprensa); durante o dia, 79,7% se sentem seguras (cerca de 1 em 5 inseguras) | IBGE, PNAD Contínua — Sensação de Segurança, com o Ministério da Justiça | 4º trimestre de 2021, divulgada em 07/12/2022; pergunta sobre andar sozinho nas redondezas do domicílio; quem nunca anda sozinho à noite fica fora do cálculo | `[EM ABERTO]` valores exatos só em reportagens; conferir no informativo do IBGE (ISBN 978-85-240-4555-4). Dado de 2021: citar o ano |
+| 8,6 milhões (8,4%) trabalham à noite, total ou parcialmente | IBGE, PNAD Contínua (via reportagem de 23/09/2026) | 102,983 milhões de ocupados; ano de referência 2025 | `[EM ABERTO]` só reportagem encontrada; conferir a publicação do IBGE |
+| 35,6% deixaram de sair à noite por medo; 36,5% mudaram um percurso rotineiro | Fórum Brasileiro de Segurança Pública / Datafolha — "Medo do crime e eleições 2026: os gatilhos da insegurança" | 2.004 entrevistas, 137 municípios, 9–10/03/2026; divulgação 10–11/05/2026; "nos últimos 12 meses"; recorte feminino: 40,9% deixaram de sair à noite | números conferem em reportagens; conferir no relatório do FBSP |
 
 ## 11. Estrutura da apresentação (slides) `[DECISÃO]`
 
