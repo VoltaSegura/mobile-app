@@ -2,6 +2,12 @@
 
 O **VoltaSegura** ajuda quem volta para casa à noite em São Paulo, de transporte público e a pé, a comparar trajetos de ida e volta antes de sair. Para cada alternativa, o app mostra o tempo, os trechos, a **exposição estimada** (calculada com registros públicos da SSP-SP) e a **confiança dos dados**, que aparecem separadas. Quem decide o trajeto é a pessoa. Este repositório traz o app em React Native/Expo, entregue na disciplina Mobile Development & IoT da GS FIAP 2026. O tema da GS é "CitizenTech".
 
+## Vídeo de demonstração
+
+[![Assista ao vídeo do VoltaSegura no YouTube](https://img.youtube.com/vi/0yP-T0kxxRY/hqdefault.jpg)](https://youtu.be/0yP-T0kxxRY)
+
+**Assista no YouTube:** [youtu.be/0yP-T0kxxRY](https://youtu.be/0yP-T0kxxRY)
+
 ## Integrantes
 
 | RM | Nome |
