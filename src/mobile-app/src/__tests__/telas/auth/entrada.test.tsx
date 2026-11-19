@@ -11,7 +11,7 @@ import { hipotesesAviso } from '@/textos/hipotesesAviso';
 import { hipotesesEntrada } from '@/textos/hipotesesEntrada';
 
 jest.mock('expo-router', () => {
-  const router = { push: jest.fn(), replace: jest.fn() };
+  const router = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: jest.fn(() => true) };
   return { Stack: { Screen: () => null }, useRouter: () => router, __router: router };
 });
 jest.mock('@/services', () => ({
@@ -23,7 +23,7 @@ jest.mock('@/sessao/SessaoContext', () => {
   return { useSessao: () => sessao, __sessao: sessao };
 });
 
-const mockRouter = jest.requireMock<{ __router: { push: jest.Mock; replace: jest.Mock } }>('expo-router').__router;
+const mockRouter = jest.requireMock<{ __router: { push: jest.Mock; replace: jest.Mock; back: jest.Mock; canGoBack: jest.Mock } }>('expo-router').__router;
 const mockPush = mockRouter.push;
 const mockReplace = mockRouter.replace;
 const mockCadastrar = jest.mocked(servicos.conta.cadastrar);
@@ -173,6 +173,33 @@ describe('TL-03 login', () => {
     await fireEvent.press(screen.getByRole('button', { name: textos.entrar.botao }));
     expect(await screen.findByText(mensagem)).toBeTruthy();
     expect(screen.queryByText(textos.criarConta.erroEmailExistente)).toBeNull();
+  });
+});
+
+describe('botão voltar de TL-02 e TL-03', () => {
+  beforeEach(() => { mockRouter.back.mockClear(); mockReplace.mockClear(); mockRouter.canGoBack.mockReturnValue(true); });
+
+  it('volta para a tela anterior quando ela existe', async () => {
+    await render(<Entrar />);
+    await fireEvent.press(screen.getByRole('button', { name: textos.comuns.voltar }));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('sem tela anterior (logo depois de sair da conta) vai para a abertura em vez de dar erro', async () => {
+    mockRouter.canGoBack.mockReturnValue(false);
+    await render(<Entrar />);
+    await fireEvent.press(screen.getByRole('button', { name: textos.comuns.voltar }));
+    expect(mockRouter.back).not.toHaveBeenCalled();
+    expect(mockReplace).toHaveBeenCalledWith('/');
+  });
+
+  it('o mesmo vale para a tela de criar conta', async () => {
+    mockRouter.canGoBack.mockReturnValue(false);
+    await render(<CriarConta />);
+    await fireEvent.press(screen.getByRole('button', { name: textos.comuns.voltar }));
+    expect(mockRouter.back).not.toHaveBeenCalled();
+    expect(mockReplace).toHaveBeenCalledWith('/');
   });
 });
 

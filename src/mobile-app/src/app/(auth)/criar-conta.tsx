@@ -65,8 +65,14 @@ export default function CriarConta() {
     }
   }
 
+  /** Sem tela anterior (ex.: logo depois de sair da conta) o `back()` não tem para onde ir: vai para a abertura. */
+  function voltar() {
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
+  }
+
   return (
-    <Tela hero={<Hero imagem="heroCriarConta" icone="account-plus-outline" altura={190} esquerda={<BotaoIcone icone="arrow-left" rotulo={textos.comuns.voltar} onPress={() => router.back()} />}><Texto variante="titulo" accessibilityRole="header">{textos.criarConta.titulo}</Texto></Hero>}>
+    <Tela hero={<Hero imagem="heroCriarConta" icone="account-plus-outline" altura={190} esquerda={<BotaoIcone icone="arrow-left" rotulo={textos.comuns.voltar} onPress={voltar} />}><Texto variante="titulo" accessibilityRole="header">{textos.criarConta.titulo}</Texto></Hero>}>
       <Stack.Screen options={{ title: textos.criarConta.titulo, headerShown: false }} />
       <Texto cor="texto2">{textos.criarConta.apoio}</Texto>
       <CampoEntrada
