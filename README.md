@@ -192,25 +192,25 @@ Quadros do vídeo de demonstração, gravado no celular com o app rodando no Exp
 
 | | | |
 |---|---|---|
-| ![Criar conta: e-mail, senha e aceite do aviso](./prints/01-criar-conta.jpg) | ![Aviso de privacidade](./prints/02-aviso-privacidade.jpg) | ![Planejar: origem, destino, horário e lugares salvos](./prints/03-planejar.jpg) |
+| ![Criar conta: e-mail, senha e aceite do aviso](./src/mobile-app/prints/01-criar-conta.jpg) | ![Aviso de privacidade](./src/mobile-app/prints/02-aviso-privacidade.jpg) | ![Planejar: origem, destino, horário e lugares salvos](./src/mobile-app/prints/03-planejar.jpg) |
 | **1. Criar conta: e-mail, senha e aceite do aviso** | **2. Aviso de privacidade** | **3. Planejar: origem, destino, horário e lugares salvos** |
-| ![Escolher origem no mapa](./prints/04-escolher-origem.jpg) | ![Salvar um lugar (casa, trabalho, estudo)](./prints/05-salvar-lugar.jpg) | ![Escolher destino no mapa](./prints/06-escolher-destino.jpg) |
+| ![Escolher origem no mapa](./src/mobile-app/prints/04-escolher-origem.jpg) | ![Salvar um lugar (casa, trabalho, estudo)](./src/mobile-app/prints/05-salvar-lugar.jpg) | ![Escolher destino no mapa](./src/mobile-app/prints/06-escolher-destino.jpg) |
 | **4. Escolher origem no mapa** | **5. Salvar um lugar (casa, trabalho, estudo)** | **6. Escolher destino no mapa** |
-| ![Horário de saída](./prints/07-horario-de-saida.jpg) | ![Buscando alternativas](./prints/08-buscando-alternativas.jpg) | ![Alternativas com exposição estimada](./prints/09-alternativas.jpg) |
+| ![Horário de saída](./src/mobile-app/prints/07-horario-de-saida.jpg) | ![Buscando alternativas](./src/mobile-app/prints/08-buscando-alternativas.jpg) | ![Alternativas com exposição estimada](./src/mobile-app/prints/09-alternativas.jpg) |
 | **7. Horário de saída** | **8. Buscando alternativas** | **9. Alternativas com exposição estimada** |
-| ![Detalhe da rota por trecho](./prints/10-detalhe-da-rota.jpg) | ![Por que esta rota?](./prints/11-por-que-esta-rota.jpg) | ![Dados considerados](./prints/12-dados-considerados.jpg) |
+| ![Detalhe da rota por trecho](./src/mobile-app/prints/10-detalhe-da-rota.jpg) | ![Por que esta rota?](./src/mobile-app/prints/11-por-que-esta-rota.jpg) | ![Dados considerados](./src/mobile-app/prints/12-dados-considerados.jpg) |
 | **10. Detalhe da rota por trecho** | **11. Por que esta rota?** | **12. Dados considerados** |
-| ![Seguir rota: aviso antes de começar](./prints/13-seguir-rota-aviso.jpg) | ![Seguir rota: próximo passo e chegada prevista](./prints/14-seguir-rota.jpg) | ![Compartilhar minha volta](./prints/15-compartilhar-minha-volta.jpg) |
+| ![Seguir rota: aviso antes de começar](./src/mobile-app/prints/13-seguir-rota-aviso.jpg) | ![Seguir rota: próximo passo e chegada prevista](./src/mobile-app/prints/14-seguir-rota.jpg) | ![Compartilhar minha volta](./src/mobile-app/prints/15-compartilhar-minha-volta.jpg) |
 | **13. Seguir rota: aviso antes de começar** | **14. Seguir rota: próximo passo e chegada prevista** | **15. Compartilhar minha volta** |
-| ![Compartilhando (protótipo com dados de exemplo)](./prints/16-compartilhando.jpg) | ![Seguir rota com o compartilhamento ativo](./prints/17-seguir-rota-compartilhando.jpg) | ![Acompanhamento encerrado](./prints/18-acompanhamento-encerrado.jpg) |
+| ![Compartilhando (protótipo com dados de exemplo)](./src/mobile-app/prints/16-compartilhando.jpg) | ![Seguir rota com o compartilhamento ativo](./src/mobile-app/prints/17-seguir-rota-compartilhando.jpg) | ![Acompanhamento encerrado](./src/mobile-app/prints/18-acompanhamento-encerrado.jpg) |
 | **16. Compartilhando (protótipo com dados de exemplo)** | **17. Seguir rota com o compartilhamento ativo** | **18. Acompanhamento encerrado** |
-| ![Locais salvos](./prints/19-locais.jpg) | ![Contatos de confiança](./prints/20-contatos.jpg) | ![VoltaSegura+ (demonstração, sem cobrança)](./prints/21-plus.jpg) |
+| ![Locais salvos](./src/mobile-app/prints/19-locais.jpg) | ![Contatos de confiança](./src/mobile-app/prints/20-contatos.jpg) | ![VoltaSegura+ (demonstração, sem cobrança)](./src/mobile-app/prints/21-plus.jpg) |
 | **19. Locais salvos** | **20. Contatos de confiança** | **21. VoltaSegura+ (demonstração, sem cobrança)** |
-| ![Perfil: tema, aviso e sair](./prints/22-perfil.jpg) | ![Começar o teste de 7 dias](./prints/23-plus-teste-gratis.jpg) | ![Planos do VoltaSegura+](./prints/24-plus-planos.jpg) |
+| ![Perfil: tema, aviso e sair](./src/mobile-app/prints/22-perfil.jpg) | ![Começar o teste de 7 dias](./src/mobile-app/prints/23-plus-teste-gratis.jpg) | ![Planos do VoltaSegura+](./src/mobile-app/prints/24-plus-planos.jpg) |
 | **22. Perfil: tema, aviso e sair** | **23. Começar o teste de 7 dias** | **24. Planos do VoltaSegura+** |
-| ![Nova rotina: origem, destino e dias](./prints/25-nova-rotina.jpg) | ![Horário de saída da rotina](./prints/26-horario-da-rotina.jpg) | ![VoltaSegura+ com rotina cadastrada](./prints/27-plus-com-rotinas.jpg) |
+| ![Nova rotina: origem, destino e dias](./src/mobile-app/prints/25-nova-rotina.jpg) | ![Horário de saída da rotina](./src/mobile-app/prints/26-horario-da-rotina.jpg) | ![VoltaSegura+ com rotina cadastrada](./src/mobile-app/prints/27-plus-com-rotinas.jpg) |
 | **25. Nova rotina: origem, destino e dias** | **26. Horário de saída da rotina** | **27. VoltaSegura+ com rotina cadastrada** |
-| ![Radar da rota (exemplo)](./prints/28-radar-da-rota.jpg) | ![Gerenciar assinatura](./prints/29-assinatura.jpg) |  |
+| ![Radar da rota (exemplo)](./src/mobile-app/prints/28-radar-da-rota.jpg) | ![Gerenciar assinatura](./src/mobile-app/prints/29-assinatura.jpg) |  |
 | **28. Radar da rota (exemplo)** | **29. Gerenciar assinatura** |  |
 
 ## Dados e banco de dados
